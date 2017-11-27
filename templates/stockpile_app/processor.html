@@ -1,0 +1,134 @@
+{% extends "stockpile_app/base.html" %}
+
+{% load staticfiles %}
+{% block pagetitle %}Hello{% endblock %}
+
+{% block pagestylesheets %}
+<style type="text/css">
+    .order-div
+    {
+        min-height: 665px;
+        max-height: 665px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .item-div
+    {
+        min-height: 840px;
+        max-height: 840px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .table-hover
+    {
+        cursor: pointer;
+    }
+    .qty-input
+    {
+        background: transparent;
+        border: none;
+        max-width: 40px;
+        border-bottom: 1px solid #ccc;
+    }
+    #order-table
+    {
+        table-layout: fixed;
+    }
+    #order-table a
+    {
+        cursor: pointer;
+    }
+    #modal-submit
+    {
+        text-align: center;
+        font-size: 20pt;
+    }
+</style>
+{% endblock %}
+
+{% block navbarmenu %}
+<div class="navbar-custom-menu">
+    <ul class="nav navbar-nav">
+        <!-- Control Sidebar Toggle Button -->
+        <li>
+            <a href="#" data-toggle="control-sidebar" id="transaction-toggle"><i class="fa fa-tasks"></i></a>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block breadcrumb %}
+<h1>
+    Dashboard
+</h1>
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="box" id="container">
+    </div>
+</div>
+
+<div class="modal fade" id="process-order">
+</div>
+<!-- /.modal -->
+{% endblock %}
+
+{% block pagescripts %}
+<script type="text/javascript">
+    function processOrder(e)
+    {
+        var transaction_id = $(e).children("td:first").text();
+        $.ajax({
+            type: "GET",
+            url: "detail/" + transaction_id,
+            success:  function (data) {
+                $('#process-order').html(data).modal('show');
+            },
+            dataType: "html"
+        });
+
+        $('.todo-list input').on('check', function() {
+            window.console.log($(this), 'The element has been checked');
+        });
+    }
+
+    $(document).ready(function (evt) {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'processor_listing' %}",
+            success: function (data) {
+                $('#container').html(data);
+            },
+            dataType: "html"
+        });
+
+        // create websocket instance
+        var ws = new WebSocket("ws://localhost:8080/");
+
+        // Handle incoming websocket message callback
+        ws.onmessage = function(evt) {
+            console.log("Message Received: " + evt.data)
+            json_data = JSON.parse(evt.data)
+            $.ajax({
+                type: "GET",
+                url: "{% url 'processor_listing' %}",
+                success: function (data) {
+                    $('#container').html(data);
+                },
+                dataType: "html"
+            });
+        };
+
+        // Close Websocket callback
+        ws.onclose = function(evt) {
+            alert("Connection closed");
+        };
+
+        // Open Websocket callback
+        ws.onopen = function(evt) {
+            console.log("Connection open")
+        };
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+<ul class="control-sidebar-menu">
+    {% if transactions.count > 0%}
+        {% for transaction in transactions %}
+            <li>
+                <a href="javascript:void(0)">
+                    <span class="menu-icon bg-blue">{{ transaction.author|capfirst|first }}</span>
+                    <div class="menu-info">
+                        <h4 class="control-sidebar-subheading">Transaction no. {{ transaction.id }}</h4>
+                        <p>{{ transaction.date|timesince }} ago</p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>
+            <a href="javascript:void(0)">
+                <div class="menu-info">
+                    <p>No Transactions yet</p>
+                </div>
+            </a>
+        </li>
+    {% endif %}
+</ul>

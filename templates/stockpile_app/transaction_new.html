@@ -1,0 +1,63 @@
+<div class="box-header with-border">
+    <h3 class="box-title">Latest Orders</h3>
+</div>
+<div class="box-body item-div">
+    {% if transactions.paginator.num_pages > 0 %}
+    <table class="table table-hover">
+        <colgroup>
+            <col style="width:15%">
+            <col style="width:15%">
+            <col style="width:40%">
+            <col style="width:30%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Items</th>
+                <th>Date</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+        <tbody id="search-results">
+            {% for transaction in transactions %}
+                <tr onclick="processOrder(this)">
+                    <td>{{ transaction.id }}</td>
+                    <td>{{ transaction.count }}</td>
+                    <td>
+                        <small class="label label-info">
+                            <i class="fa fa-clock-o"></i>
+                            {{ transaction.date|timesince }}
+                        </small>
+                    </td>
+                    <td>{{ transaction.author.username }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <em>No records found</em>
+    {% endif %}
+</div>
+<div class="box-footer clearfix">
+    <ul class="pagination pagination-sm no-margin pull-left">
+        {% if contacts.has_previous %}
+            <li>
+                <a href="?page={{ transactions.previous_page_number }}">
+                    {{ transactions.previous_page_number }}
+                </a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="javascript:void(0)">
+                Page {{ transactions.number }} of {{ transactions.paginator.num_pages }}
+            </a>
+        </li>
+        {% if contacts.has_next %}
+            <li>
+                <a href="?page={{ transactions.next_page_number }}">
+                    transactions.next_page_number
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
