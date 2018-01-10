@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block pagetitle %}403 Foridden{% endblock %}
+
+{% block breadcrumb %}
+    <h1>403 Foridden</h1>
+{% endblock %}
+
+{% block main %}
+    <div class="error-page">
+        <h2 class="headline text-yellow"> 403</h2>
+
+        <div class="error-content">
+            <h3><i class="fa fa-warning text-yellow"></i> Oops! Access Denied.</h3>
+            <p>
+                You are not authorized to access this page.
+                Meanwhile, you may return to <a href="{% url 'home' %}">home</a> page.
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_side_bar %}
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+        <li class="active">
+            <a href="#control-sidebar-home-tab" data-toggle="tab" aria-expanded="false">
+                <p>Recent Transactions</p>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane active" id="control-sidebar-home-tab">
+        </div>
+    </div>
+{% endblock %}

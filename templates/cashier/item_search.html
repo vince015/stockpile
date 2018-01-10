@@ -1,0 +1,18 @@
+{% if items.count > 0%}
+    {% for item in items %}
+        <tr onclick="itemSelect(this)">
+            <td>{{ item.id }}</td>
+            <td><a>{{ item.description }}</a></td>
+            <td>{{ item.stock }}</td>
+            <td>{{ item.price }}</td>
+        </tr>
+    {% endfor %}
+{% elif error %}
+    <tr>
+        <td colspan="5">{{ error }}</td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="5">Nothing to show</td>
+    </tr>
+{% endif %}

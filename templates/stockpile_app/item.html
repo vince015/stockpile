@@ -1,7 +1,7 @@
 {% extends "stockpile_app/base.html" %}
 
 {% load staticfiles %}
-{% block pagetitle %}Hello{% endblock %}
+{% block pagetitle %}Items{% endblock %}
 
 {% block pagestylesheets %}
 <style type="text/css">
@@ -18,7 +18,7 @@
     <small>ALL</small>
 </h1>
 <ol class="breadcrumb">
-    <li><a href="{% url 'home' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
     <li class="active">Items</li>
 </ol>
 {% endblock %}

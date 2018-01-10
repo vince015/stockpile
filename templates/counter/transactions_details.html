@@ -1,0 +1,28 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header bg-light-blue">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">
+                <span class="label label-danger">{{ transaction.id }}</span>
+                <span class="text">S.I. Number: {{ transaction.number }}</span>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <ul class="todo-list">
+                {% for particular in particulars %}
+                    <li>
+                        <span class="label label-danger">{{ particular.quantity }}</span>
+                        <span class="text">{{ particular.item.description }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <input type="hidden" name="status" value="R">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="orderDone({{ transaction.id }})">Done</button>
+            <button type="button" class="btn btn-sm btn-danger pull-left" onclick="orderCancel({{ transaction.id }})">Cancel</button>
+        </div>
+    </div>
+</div>

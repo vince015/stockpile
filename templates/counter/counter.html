@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block pagetitle %}Counter{% endblock %}
+
+{% block pagestylesheets %}
+<style type="text/css">
+    .order-div
+    {
+        min-height: 665px;
+        max-height: 665px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .item-div
+    {
+        min-height: 840px;
+        max-height: 840px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    .table-hover
+    {
+        cursor: pointer;
+    }
+    .qty-input
+    {
+        background: transparent;
+        border: none;
+        max-width: 40px;
+        border-bottom: 1px solid #ccc;
+    }
+    #order-table
+    {
+        table-layout: fixed;
+    }
+    #order-table a
+    {
+        cursor: pointer;
+    }
+    #modal-submit
+    {
+        text-align: center;
+        font-size: 20pt;
+    }
+</style>
+{% endblock %}
+
+{% block navbarmenu %}
+{% endblock %}
+
+{% block breadcrumb %}
+<h1>
+    Counter
+</h1>
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="box" id="container">
+    </div>
+</div>
+
+<div class="modal fade" id="process-order">
+</div>
+{% endblock %}
+
+{% block right_side_bar %}
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+        <li class="active">
+            <a href="#control-sidebar-home-tab" data-toggle="tab" aria-expanded="false">
+                <p>Recent Transactions</p>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <!-- Home tab content -->
+        <div class="tab-pane active" id="control-sidebar-home-tab">
+        </div>
+    </div>
+{% endblock %}
+
+{% block pagescripts %}
+<script type="text/javascript">
+    function getTransactions(page)
+    {
+        $.ajax({
+            type: "GET",
+            data: {"page": page},
+            url: "{% url 'counter_transactions' %}",
+            success: function (data) {
+                $('#container').html(data);
+            },
+            dataType: "html"
+        });
+    }
+    function processOrder(e)
+    {
+        var order_id = $(e).children("td:first").text();
+        $.ajax({
+            type: "GET",
+            url: "transactions/details/" + order_id,
+            success:  function (data) {
+                $('#process-order').html(data).modal('show');
+            },
+            dataType: "html"
+        });
+
+        $('.todo-list input').on('check', function() {
+            window.console.log($(this), 'The element has been checked');
+        });
+    }
+
+    function orderDone(order_id)
+    {
+        $.ajax({
+            type: "POST",
+            url: "transactions/edit/" + order_id,
+            data: {
+                "status": "D",
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            success:  orderDoneOK,
+            error: orderDoneNG,
+            dataType: "json"
+        });
+    }
+    function orderDoneOK(data, textStatus, jqXHR)
+    {
+        $('#process-order').html(data).modal('hide');
+
+        var msg = "Transaction No. " + data.id + " with S.I. No. " + data.number + " is updated to DONE"
+
+        $.toaster({
+            priority : "success",
+            title : "Success",
+            message : msg
+        });
+
+        getTransactions();
+    }
+    function orderDoneNG(jqXHR, textStatus, errorThrown)
+    {
+        var msg = "Failed in updating order.";
+        if(jqXHR.status == 400)
+        {
+            var error = JSON.parse(jqXHR.responseText);
+            $.each(error, function(index, value) {
+                if (index == "non_field_errors")
+                {
+                    for(i = 0; i < value.length; i++)
+                    {
+                        $.toaster({
+                            priority : "danger",
+                            title : "Error",
+                            message : value[i]
+                        });
+                    }
+                }
+                else if (index == "particulars")
+                {
+                    for(i = 0; i < value.length; i++)
+                    {
+                        if ("non_field_errors" in value[i])
+                        {
+                            for(j = 0; j < value[i].non_field_errors.length; j++)
+                            {
+                                $.toaster({
+                                    priority : "danger",
+                                    title : "Error",
+                                    message : value[i].non_field_errors[j]
+                                });
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var target = $( "label[for='"+ index +"']" );
+                    target.css("display", "block");
+                    target.text(value[0]);
+                    target.parent().addClass("has-error");
+                }
+            });
+        }
+    }
+
+    function orderCancel(order_id)
+    {
+        $.ajax({
+            type: "POST",
+            url: "transactions/edit/" + order_id,
+            data: {
+                "status": "C",
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            success:  orderCancelOK,
+            error: orderCancelNG,
+            dataType: "json"
+        });
+    }
+    function orderCancelOK(data, textStatus, jqXHR)
+    {
+        $('#process-order').html(data).modal('hide');
+
+        var msg = "Transaction No. " + data.id + " with S.I. No. " + data.number + " is updated to CANCEL"
+
+        $.toaster({
+            priority : "success",
+            title : "Success",
+            message : msg
+        });
+
+        getTransactions();
+    }
+    function orderCancelNG(jqXHR, textStatus, errorThrown)
+    {
+        var msg = "Failed in updating order.";
+        if(jqXHR.status == 400)
+        {
+            var error = JSON.parse(jqXHR.responseText);
+            $.each(error, function(index, value) {
+                if (index == "non_field_errors")
+                {
+                    for(i = 0; i < value.length; i++)
+                    {
+                        $.toaster({
+                            priority : "danger",
+                            title : "Error",
+                            message : value[i]
+                        });
+                    }
+                }
+                else if (index == "particulars")
+                {
+                    for(i = 0; i < value.length; i++)
+                    {
+                        if ("non_field_errors" in value[i])
+                        {
+                            for(j = 0; j < value[i].non_field_errors.length; j++)
+                            {
+                                $.toaster({
+                                    priority : "danger",
+                                    title : "Error",
+                                    message : value[i].non_field_errors[j]
+                                });
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var target = $( "label[for='"+ index +"']" );
+                    target.css("display", "block");
+                    target.text(value[0]);
+                    target.parent().addClass("has-error");
+                }
+            });
+        }
+    }
+
+    function onToDoItemChange(e)
+    {
+        if ($(e).is(':checked'))
+        {
+            $(e).parent().addClass("done");
+        }
+        else
+        {
+            $(e).parent().removeClass("done");
+        }
+    }
+
+    // create websocket instance
+    var ws = new WebSocket("ws://localhost:8080/");
+
+    // Handle incoming websocket message callback
+    ws.onmessage = function(evt) {
+        $("#notification span").text("!");
+        getTransactions();
+    };
+
+    // Close Websocket callback
+    ws.onclose = function(evt) {
+        alert("Connection closed");
+    };
+
+    // Open Websocket callback
+    ws.onopen = function(evt) {
+        console.log("Connection open");
+        getTransactions();
+    };
+</script>
+{% endblock %}

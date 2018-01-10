@@ -1,5 +1,5 @@
 from django import forms
-from stockpile_app.models import (Item, Sale, Transaction)
+from stockpile_app.models import (Item, Transaction)
 
 class ItemForm(forms.ModelForm):
 
@@ -20,23 +20,28 @@ class ItemForm(forms.ModelForm):
                                               'class': 'form-control'})
         }
 
-class SaleForm(forms.ModelForm):
-
-    class Meta:
-        model = Sale
-        fields = [
-                    'quantity',
-                    'item',
-                    'transaction'
-                ]
-
 class TransactionForm(forms.ModelForm):
 
-    class Transaction:
-        model = Sale
+    class Meta:
+        status_choice = (
+            ('N', 'New'),
+            ('R', 'Ready'),
+            ('D', 'Done'),
+            ('C', 'Cancel')
+        )
+        model = Transaction
         fields = [
+                    'number',
                     'status',
-                    'date',
-                    'count',
-                    'author'
+                    'assignee',
+                    'remarks'
                 ]
+        widgets = {
+            'number': forms.TextInput(attrs={'class': 'form-control',
+                                             'placeholder': 'S.I. No.'}),
+            'status': forms.Select(choices=status_choice),
+            'assignee': forms.TextInput(attrs={'class': 'form-control',
+                                               'placeholder': 'Assignee'}),
+            'remarks': forms.TextInput(attrs={'class': 'form-control',
+                                              'placeholder': 'Remarks'}),
+        }

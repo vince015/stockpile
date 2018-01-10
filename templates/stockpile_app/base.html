@@ -28,10 +28,10 @@
         <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
         <link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
     </head>
-    <body class="hold-transition skin-blue-light sidebar-mini">
-        <div id="wrapper">
+    <body class="skin-blue-light sidebar-mini">
+        <div class="wrapper">
             <header class="main-header">
-                <a href="{% url 'home' %}" class="logo">
+                <a href="{% url 'dashboard' %}" class="logo" style="position:fixed">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
                     <span class="logo-mini"><b>S</b>P</span>
                     <!-- logo for regular state and mobile devices -->
@@ -39,7 +39,7 @@
                 </a>
 
                 <!-- Header Navbar: style can be found in header.less -->
-                <nav class="navbar navbar-fixed-top">
+                <nav class="navbar">
                     <!-- Sidebar toggle button-->
                     <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                         <span class="sr-only">Toggle navigation</span>
@@ -49,7 +49,7 @@
                 </nav>
             </header>
 
-            <aside class="main-sidebar">
+            <aside class="main-sidebar" style="position:fixed">
                 <!-- sidebar: style can be found in sidebar.less -->
                 <section class="sidebar">
                     <!-- Sidebar user panel -->
@@ -66,9 +66,21 @@
                     <ul class="sidebar-menu" data-widget="tree">
                         <li class="header">MAIN NAVIGATION</li>
                         <li>
+                            <a href="{% url 'dashboard' %}">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{% url 'item_list' %}">
                                 <i class="fa fa-cubes"></i>
                                 <span>Items</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'order_list' %}">
+                                <i class="fa fa-inbox"></i>
+                                <span>Orders</span>
                             </a>
                         </li>
                         <li>
@@ -83,43 +95,57 @@
                                 <span>Sales</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{% url 'counter' %}">
+                                <i class="fa  fa-exchange"></i>
+                                <span>Counter</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>
 
             <!-- Full Width Column -->
             <div class="content-wrapper">
-                <div class="container">
-                    <!-- Content Header (Page header) -->
-                    <section class="content-header">
-                        <!-- filler -->
-                        &nbsp;
-                    </section>
+                <section class="content-header">
+                    {% block breadcrumb %}{% endblock %}
+                </section>
 
-                    <section class="content-header">
-                        {% block breadcrumb %}{% endblock %}
-                    </section>
+                <section class="content">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags %}
+                                {% if message.tags == 'success' %}
+                                <div class="box box-success box-solid">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Success</h3>
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        {{ message }}
+                                    </div>
+                                </div>
+                                {% elif message.tags == 'error' %}
+                                <div class="box box-danger">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Error</h3>
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        {{ message }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
 
-                    <section class="content">
-                        {% if messages %}
-                            <div class="callout callout-success">
-                                <ul>
-                                {% for message in messages %}
-                                    {% if message.tags %}
-                                        {% if message.tags == 'success' %}
-                                            <li>{{ message }}</li>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-
-                        {% block callouts %}{% endblock %}
-
-                        {% block main %}{% endblock %}
-                    </section>
-                </div>
+                    {% block main %}{% endblock %}
+                </section>
             </div>
 
             <footer class="main-footer">

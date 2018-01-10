@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>StockPile | {% block pagetitle %}{% endblock %} </title>
+        <link rel="icon" type="image/png" href="{% static 'images/logo_mini.png' %}">
+
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+        <!-- Bootstrap 3.3.7 -->
+        <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="{% static 'bower_components/Ionicons/css/ionicons.min.css' %}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.css' %}">
+        {% block pagestylesheets %} {% endblock %}
+
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+           folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+    </head>
+    <body class="hold-transition skin-blue layout-top-nav">
+        <div class="wrapper">
+            <header class="main-header">
+                <nav class="navbar navbar-static-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a href="{% url 'home' %}" class="navbar-brand">
+                                <b>Stock</b>Pile
+                            </a>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </div>
+                        {% block links %} {% endblock %}
+                        <div class="navbar-custom-menu">
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown user user-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-user"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="user-header">
+                                            <img src="{% static 'images/pic_placeholder.png' %}" alt="StockPile" class="img-circle">
+                                            <p>{{ user.username }}</p>
+                                        </li>
+                                        <li class="user-footer">
+                                            {% if request.user.is_superuser %}
+                                            <div class="pull-left">
+                                                <a href="/admin" class="btn btn-default btn-flat btn-sm">Admin Site</a>
+                                            </div>
+                                            {% endif %}
+                                            <div class="pull-right">
+                                                <a href="{% url 'logout' %}" class="btn btn-default btn-flat">
+                                                    <i class="fa fa-sign-out"></i> Logout
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" id="notification" data-toggle="control-sidebar">
+                                        <i class="fa fa-inbox"></i>
+                                        <span class="label label-danger"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="container">
+                    <section class="content-header">
+                        {% block breadcrumb %}{% endblock %}
+                    </section>
+                    <section class="content">
+                        {% block main %} {% endblock %}
+                    </section>
+                </div>
+            </div>
+
+            <footer class="main-footer">
+                <div class="hidden-xs">
+                    <b class="pull-left hidden-xs">Version 0.10</b>
+                    <small class="text-muted pull-right">
+                       TAPANG VEF &copy; COPYRIGHT 2017. ALL RIGHTS RESERVED.
+                    </small>
+                </div>
+                <hr>
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.4.0
+                </div>
+                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong>
+                All rights reserved..
+            </footer>
+
+            <aside class="control-sidebar control-sidebar-dark">
+                {% block right_side_bar %} {% endblock %}
+            </aside>
+        </div>
+
+        <!-- jQuery 3 -->
+        <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+          $.widget.bridge('uibutton', $.ui.button);
+        </script>
+        <!-- jQuery Toaster -->
+        <script src="{% static 'bower_components/jquery-toaster/jquery.toaster.js' %}"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+        <!-- datepicker -->
+        <script src="{% static 'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        <!-- AdminLTE App -->
+        <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+        <!-- FastClick -->
+        <script src="{% static 'bower_components/fastclick/lib/fastclick.js' %}"></script>
+        <script type="text/javascript">
+            $("#notification").click(function() {
+                $("#notification span").text("");
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'transaction_latest' %}",
+                    data: {
+                        "csrfmiddlewaretoken": "{{ csrf_token }}"
+                    },
+                    success: orderLatestResult,
+                    dataType: "html"
+                })
+            });
+
+            function orderLatestResult(data, textStatus, jqXHR)
+            {
+                $("#control-sidebar-home-tab").html(data);
+            }
+        </script>
+        {% block pagescripts %} {% endblock %}
+
+    </body>
+</html>

@@ -1,7 +1,7 @@
 {% extends "stockpile_app/base.html" %}
 
 {% load staticfiles %}
-{% block pagetitle %}Hello{% endblock %}
+{% block pagetitle %}Counter{% endblock %}
 
 {% block pagestylesheets %}
 <style type="text/css">
@@ -47,19 +47,11 @@
 {% endblock %}
 
 {% block navbarmenu %}
-<div class="navbar-custom-menu">
-    <ul class="nav navbar-nav">
-        <!-- Control Sidebar Toggle Button -->
-        <li>
-            <a href="#" data-toggle="control-sidebar" id="transaction-toggle"><i class="fa fa-tasks"></i></a>
-        </li>
-    </ul>
-</div>
 {% endblock %}
 
 {% block breadcrumb %}
 <h1>
-    Dashboard
+    Counter
 </h1>
 {% endblock %}
 
@@ -71,17 +63,16 @@
 
 <div class="modal fade" id="process-order">
 </div>
-<!-- /.modal -->
 {% endblock %}
 
 {% block pagescripts %}
 <script type="text/javascript">
     function processOrder(e)
     {
-        var transaction_id = $(e).children("td:first").text();
+        var order_id = $(e).children("td:first").text();
         $.ajax({
             type: "GET",
-            url: "detail/" + transaction_id,
+            url: "detail/" + order_id,
             success:  function (data) {
                 $('#process-order').html(data).modal('show');
             },
@@ -93,16 +84,53 @@
         });
     }
 
+    function orderDone(order_id)
+    {
+        $.ajax({
+            type: "POST",
+            url: "edit/" + order_id,
+            data: {
+                "status": "D",
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            success:  orderDoneOK,
+            error: orderDoneNG,
+            dataType: "json"
+        });
+    }
+    function orderDoneOK(data, textStatus, jqXHR)
+    {
+        $.toaster("Updated Order no. " + data.created,
+                  "Successfully updated order",
+                  "success");
+    }
+    function orderDoneNG(jqXHR, textStatus, errorThrown)
+    {
+        var msg = "Failed in updating order.";
+        if(jqXHR.status == 400)
+        {
+            var error = JSON.parse(jqXHR.responseText);
+            msg = "";
+            $.each(error, function(index, value) {
+                msg = msg + value;
+            });
+        }
+        $.toaster(msg,
+                  "Unable to update order",
+                  "error");
+    }
+
     $(document).ready(function (evt) {
         $.ajax({
             type: "GET",
-            url: "{% url 'processor_listing' %}",
+            url: "{% url 'counter_orders' %}",
             success: function (data) {
                 $('#container').html(data);
             },
             dataType: "html"
         });
 
+        /*
         // create websocket instance
         var ws = new WebSocket("ws://localhost:8080/");
 
@@ -112,7 +140,7 @@
             json_data = JSON.parse(evt.data)
             $.ajax({
                 type: "GET",
-                url: "{% url 'processor_listing' %}",
+                url: "{% url 'counter_orders' %}",
                 success: function (data) {
                     $('#container').html(data);
                 },
@@ -129,6 +157,7 @@
         ws.onopen = function(evt) {
             console.log("Connection open")
         };
+        */
     });
 </script>
 {% endblock %}

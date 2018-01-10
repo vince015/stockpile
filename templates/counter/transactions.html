@@ -1,0 +1,80 @@
+<div class="box-header with-border">
+    <h3 class="box-title">Latest Orders</h3>
+    <div class="pull-right box-tools">
+        <button type="button" class="btn" onclick="getTransactions()">
+        <i class="fa fa-refresh"></i></button>
+    </div>
+</div>
+<div class="box-body item-div">
+    <table class="table table-hover">
+        <colgroup>
+            <col style="width:10%">
+            <col style="width:15%">
+            <col style="width:15%">
+            <col style="width:30%">
+            <col style="width:25%">
+            <col style="width:15%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>S.I.</th>
+                <th>Time</th>
+                <th>Author</th>
+                <th>Assignee</th>
+            </tr>
+        </thead>
+        <tbody id="search-results">
+            {% if transactions.paginator.num_pages > 0 %}
+                {% for transaction in transactions %}
+                    <tr onclick="processOrder(this)">
+                        <td>{{ transaction.id }}</td>
+                        <td>{{ transaction.number }}</td>
+                        <td>
+                            <small class="label label-warning">
+                                <i class="fa fa-clock-o"></i>
+                                {{ transaction.timestamp|timesince }}
+                            </small>
+                        </td>
+                        <td>{{ transaction.author.username|default_if_none:"" }}</td>
+                        <td>{{ transaction.assignee|default_if_none:"" }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<div class="box-footer clearfix">
+    <ul class="pagination pagination-sm no-margin pull-right">
+        <li>
+            <a onclick="getTransactions(1)">
+                «
+            </a>
+        </li>
+        {% if transactions.has_previous %}
+            <li>
+                <a onclick="getTransactions({{ transactions.previous_page_number }})">
+                    {{ transactions.previous_page_number }}
+                </a>
+            </li>
+        {% endif %}
+        <li class="active">
+            <a href="javascript:void(0)">
+                {{ transactions.number }}
+            </a>
+        </li>
+        {% if transactions.has_next %}
+            <li>
+                <a onclick="getTransactions({{ transactions.next_page_number }})">
+                    {{ transactions.next_page_number }}
+                </a>
+            </li>
+        {% endif %}
+        <li>
+            <a onclick="getTransactions({{ transactions.paginator.num_pages }})">
+                »
+            </a>
+        </li>
+    </ul>
+</div>
+

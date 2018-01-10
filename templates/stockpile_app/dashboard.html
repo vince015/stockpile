@@ -1,22 +1,19 @@
 {% extends "stockpile_app/base.html" %}
 
 {% load staticfiles %}
-{% block pagetitle %}Hello{% endblock %}
+{% block pagetitle %}Dashboard{% endblock %}
 
 {% block pagestylesheets %}
 <style type="text/css">
     .order-div
     {
-        min-height: 665px;
-        max-height: 665px;
+        min-height: 450px;
+        max-height: 450px;
         overflow-y: auto;
-        overflow-x: auto;
     }
     .item-div
     {
-        min-height: 840px;
-        max-height: 840px;
-        overflow-y: auto;
+        overflow-y: hidden;
         overflow-x: auto;
     }
     .table-hover
@@ -68,17 +65,34 @@
     <div class="col-md-6">
         <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">Order at Hand</h3>
+                <table class="table bg-light-blue disabled color-palette">
+                    <tr>
+                        <td style="width:50%">
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Sales Invoice No."
+                                   name="number"
+                                   id="number">
+                        </td>
+                        <td style="width:50%">
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Assignee"
+                                   name="assignee"
+                                   id="assignee">
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="box-body order-div">
                 <div class="table-responsive">
                     <table class="table table-striped no-margin" id="order-table">
                         <colgroup>
-                            <col style="width:10%">
+                            <col style="width:5%">
                             <col style="width:50%">
                             <col style="width:10%;max-width:55px;min-width:55px;">
                             <col style="width:15%">
-                            <col style="width:15%">
+                            <col style="width:20%">
                         </colgroup>
                         <thead>
                             <tr>
@@ -175,25 +189,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <!-- <ul class="products-list product-list-in-box" id="search-results">
-                    {% for item in items %}
-                        <li class="item">
-                            <div class="product-img">
-                                <a href="" class="btn btn-sm btn-primary btn-flat pull-left">
-                                    <i class="glyphicon glyphicon-chevron-left"></i>
-                                    <span class="badge bg-green">{{ item.stock }}</span>
-                                </a>
-                                <b class="pull-right">1000</b>
-                            </div>
-                            <div class="product-info">
-                                <span class="product-description">
-                                    <span class="label label-success pull-right">Php {{ item.price }}</span>
-                                </span>
-                                <a href="#" class="product-title">{{ item.description }}</a>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul> -->
             </div>
         </div>
     </div>
@@ -380,27 +375,31 @@
         // };
         // $("#modal-submit").modal(modal_settings);
 
-        var order_data = []
+        var items = []
         $("#order-table > tbody  > tr").each(function (i, el) {
             var tds = $(this).find('td');
 
             var id = $(this).attr('id');
             var qty = parseInt(tds.eq(2).text());
+            var price = parseInt(tds.eq(3).text());
 
             var order_item = {
                 "id": id.split('-')[1],
-                "qty": qty
+                "qty": qty,
+                "price": price
             };
-            order_data.push(order_item);
+            items.push(order_item);
         });
         var data = {
-            "order_data": JSON.stringify(order_data),
+            "items": JSON.stringify(items),
+            "number": $("#number").val(),
+            "assignee": $("#assignee").val(),
             "csrfmiddlewaretoken": "{{ csrf_token }}"
         };
 
         $.ajax({
             type: "POST",
-            url: "{% url 'transactions_add' %}",
+            url: "{% url 'order_add' %}",
             data: data,
             success: transactionAddedOK,
             error: transactionAddedNG,
@@ -426,7 +425,7 @@
             dataType: "html"
         })
 
-        $.toaster("Order added in Transaction no. " + data.created,
+        $.toaster("Order with SI no. " + data.number + " added in Order no. " + data.id,
                   "Successfully added orders",
                   "success");
 

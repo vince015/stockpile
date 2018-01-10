@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>StockPile | {% block pagetitle %}{% endblock %} </title>
+        <link rel="icon" type="image/png" href="{% static 'images/logo_mini.png' %}">
+
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+        <!-- Bootstrap 3.3.7 -->
+        <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="{% static 'bower_components/Ionicons/css/ionicons.min.css' %}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.css' %}">
+        {% block pagestylesheets %}{% endblock %}
+
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+           folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+    </head>
+    <body class="skin-blue-light">
+        <div class="wrapper">
+            <header class="main-header">
+                <a href="{% url 'dashboard' %}" class="logo" style="position:fixed">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>S</b>P</span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><b>Stock</b>Pile</span>
+                </a>
+
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                    </a>
+
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{% static 'images/pic_placeholder.png' %}" alt="StockPile" class="user-image" alt="User Image">
+                                    <span class="hidden-xs">{{ user.username }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            <aside class="main-sidebar" style="position:fixed;">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
+                    <form action="#" method="get" class="sidebar-form">
+                        <div class="input-group">
+                            <input type="text" name="number" id="number" class="form-control" placeholder="Sales Invoice No.">
+                        </div>
+                    </form>
+                    <ul class="products-list product-list-in-box">
+                        <li class="item">
+                          <div class="product-info">
+                            <a href="javascript:void(0)" class="product-title">Samsung TV
+                              <span class="label label-warning pull-right">$1800</span></a>
+                            <span class="product-description">
+                                  Samsung 32" 1080p 60Hz LED Smart HDTV.
+                                </span>
+                          </div>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+
+            <!-- Full Width Column -->
+            <div class="content-wrapper">
+                <section class="content-header">
+                    {% block breadcrumb %}{% endblock %}
+                </section>
+
+                <section class="content">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags %}
+                                {% if message.tags == 'success' %}
+                                <div class="box box-success box-solid">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Success</h3>
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        {{ message }}
+                                    </div>
+                                </div>
+                                {% elif message.tags == 'error' %}
+                                <div class="box box-danger">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Error</h3>
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        {{ message }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <div class="input-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Search"
+                                           name="q"
+                                           id="search-box">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                            <div class="box-body item-div">
+                                <table class="table table-hover">
+                                    <colgroup>
+                                        <col style="width:10%">
+                                        <col style="width:65%">
+                                        <col style="width:10%">
+                                        <col style="width:15%">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Item</th>
+                                            <th>Stock</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="search-results">
+                                        {% for item in items %}
+                                            <tr onclick="itemSelect(this)">
+                                                <td>{{ item.id }}</td>
+                                                <td>{{ item.description }}</td>
+                                                <td>{{ item.stock }}</td>
+                                                <td>{{ item.price }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="main-footer">
+                <div class="hidden-xs">
+                    <b class="pull-left hidden-xs">Version 0.10</b>
+                    <small class="text-muted pull-right">
+                       TAPANG VEF &copy; COPYRIGHT 2017. ALL RIGHTS RESERVED.
+                    </small>
+                </div>
+                <hr>
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.4.0
+                </div>
+                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong>
+                All rights reserved..
+            </footer>
+
+            <aside class="control-sidebar control-sidebar-dark">
+                {% block right-sidebar %}{% endblock %}
+            </aside>
+        </div>
+
+        <!-- jQuery 3 -->
+        <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+          $.widget.bridge('uibutton', $.ui.button);
+        </script>
+        <!-- jQuery Toaster -->
+        <script src="{% static 'bower_components/jquery-toaster/jquery.toaster.js' %}"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+        <!-- datepicker -->
+        <script src="{% static 'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        <!-- AdminLTE App -->
+        <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+        <!-- FastClick -->
+        <script src="{% static 'bower_components/fastclick/lib/fastclick.js' %}"></script>
+
+        {% block pagescripts %}{% endblock %}
+    </body>
+</html>

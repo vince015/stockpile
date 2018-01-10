@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.core import urlresolvers
-from stockpile_app.models import (Item,
-                                  Transaction,
-                                  Sale)
+from stockpile_app.models import (Transaction,
+                                  Item,
+                                  Particular)
 
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'description', 'unit', 'stock', 'price')
@@ -12,40 +15,42 @@ class ItemAdmin(admin.ModelAdmin):
     list_per_page = 50
 admin.site.register(Item, ItemAdmin)
 
+
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status', 'date', 'author_name')
+    list_display = ('id', 'number', 'transaction_type', 'status', 'timestamp', 'author__username')
     list_display_links = ['id']
-    search_fields = ['id', 'status']
+    list_filter = ('transaction_type', 'status')
+    search_fields = ['id', 'number', 'transaction_type']
     list_per_page = 50
 
-    def author_name(self, obj):
+    def author__username(self, obj):
         if obj.author:
             link = urlresolvers.reverse("admin:auth_user_change", args=[obj.author.id])
-            return '<a href="{0}">{1}</a>'.format(obj.author.id, obj.author.username)
+            return '<a href="{0}">{1}</a>'.format(link, obj.author.username)
         else:
-            return '--'
-    author_name.allow_tags = True
+            return ''
+    author__username.allow_tags = True
 admin.site.register(Transaction, TransactionAdmin)
 
-class SaleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'quantity', 'item_id', 'transaction_id')
+class ParticularAdmin(admin.ModelAdmin):
+    list_display = ('id', 'transaction__number', 'item__description', 'subtotal', 'quantity')
     list_display_links = ['id']
-    search_fields = ['id']
+    search_fields = ['id', 'transaction__number', 'item__description']
     list_per_page = 50
 
-    def item_id(self, obj):
-        if obj.item:
-            link = urlresolvers.reverse("admin:stockpile_app_item_change", args=[obj.item.id])
-            return '<a href="{0}">{1}</a>'.format(obj.item.id, obj.item.description)
-        else:
-            return '--'
-    item_id.allow_tags = True
-
-    def transaction_id(self, obj):
+    def transaction__number(self, obj):
         if obj.transaction:
             link = urlresolvers.reverse("admin:stockpile_app_transaction_change", args=[obj.transaction.id])
-            return '<a href="{0}">{0}</a>'.format(obj.transaction.id)
+            return '<a href="{0}">{1}</a>'.format(link, obj.transaction.number)
         else:
-            return '--'
-    transaction_id.allow_tags = True
-admin.site.register(Sale, SaleAdmin)
+            return ''
+    transaction__number.allow_tags = True
+
+    def item__description(self, obj):
+        if obj.item:
+            link = urlresolvers.reverse("admin:stockpile_app_item_change", args=[obj.item.id])
+            return '<a href="{0}">{1}</a>'.format(link, obj.item.description)
+        else:
+            return ''
+    item__description.allow_tags = True
+admin.site.register(Particular, ParticularAdmin)

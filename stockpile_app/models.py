@@ -9,6 +9,43 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.db.models import signals
 
+class Transaction(models.Model):
+
+    type_choice = (
+        ('IN', 'in'),
+        ('OUT', 'out')
+    )
+    status_choice = (
+        ('N', 'new'),
+        ('R', 'ready'),
+        ('D', 'done'),
+        ('C', 'cancel')
+    )
+
+    number = models.CharField(max_length=32,
+                              null=False,
+                              blank=False)
+    transaction_type = models.CharField(max_length=3,
+                                        choices=type_choice,
+                                        default='OUT')
+    status = models.CharField(max_length=2,
+                              choices=status_choice,
+                              default='N')
+    timestamp = models.DateTimeField(blank=False,
+                                     null=True,
+                                     auto_now_add=True)
+    author = models.ForeignKey(User,
+                               on_delete=models.SET_NULL,
+                               blank=True,
+                               null=True,
+                               default=None)
+    assignee = models.CharField(max_length=64,
+                                null=True,
+                                blank=True)
+    remarks = models.CharField(max_length=256,
+                               null=True,
+                               blank=True)
+
 class Item(models.Model):
     description = models.CharField(max_length=256,
                                    null=True)
@@ -24,55 +61,23 @@ class Item(models.Model):
                                 validators=[MinValueValidator(decimal.Decimal('0.01'))],
                                 default=0.0)
 
-class Transaction(models.Model):
+class Particular(models.Model):
 
-    status_choice = (
-        ('N', 'new'),
-        ('S', 'seen'),
-        ('D', 'done'),
-        ('C', 'cancel')
-    )
-
-    status = models.CharField(max_length=2,
-                              choices=status_choice,
-                              default='N')
-    date = models.DateTimeField(blank=False,
-                                null=True,
-                                auto_now_add=True)
-    count = models.PositiveSmallIntegerField(blank=True,
-                                             null=True,
-                                             default=0)
-    author = models.ForeignKey(User,
-                               on_delete=models.CASCADE,
-                               blank=True,
-                               null=True,
-                               default=None)
-
-class Sale(models.Model):
-    quantity = models.PositiveSmallIntegerField(blank=False,
-                                                null=True)
-    item = models.ForeignKey(Item,
-                             related_name='specifics',
-                             on_delete=models.CASCADE,
-                             blank=True,
-                             null=True,
-                             default=None)
     transaction = models.ForeignKey(Transaction,
-                                    related_name='items',
+                                    related_name='particulars',
                                     on_delete=models.CASCADE,
                                     blank=True,
                                     null=True,
                                     default=None)
-
-    def clean(self):
-        if self.quantity > self.item.stock:
-            detail = 'Quantity for item, {0}, cannot be grater than its stock ({1}).'.format(self.item.description,
-                                                                                             self.item.stock)
-            raise ValidationError({'quantity': _(detail)})
-
-    def save(self, *args, **kwargs):
-        qty = getattr(self, 'quantity', 0)
-        self.item.stock = self.item.stock - qty;
-        self.item.save()
-
-        super(Sale, self).save(*args, **kwargs)
+    item = models.ForeignKey(Item,
+                             related_name='item',
+                             on_delete=models.SET_NULL,
+                             blank=True,
+                             null=True,
+                             default=None)
+    quantity = models.PositiveSmallIntegerField(blank=True,
+                                                null=True,
+                                                default=0)
+    subtotal = models.PositiveIntegerField(blank=True,
+                                           null=True,
+                                           default=0)
