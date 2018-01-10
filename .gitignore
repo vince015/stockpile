@@ -12,6 +12,7 @@ eggs
 fake-eggs
 parts
 dist
+migrations
 .installed.cfg
 .mr.developer.cfg
 .hg
