@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.core import urlresolvers
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+
 from stockpile_app.models import (Transaction,
                                   Item,
                                   Particular)
@@ -8,20 +11,34 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 
-class ItemAdmin(admin.ModelAdmin):
+class ItemResource(resources.ModelResource):
+
+    class Meta:
+        model = Item
+        fields = ('id', 'description', 'unit', 'stock', 'price')
+
+class ItemAdmin(ImportExportModelAdmin):
     list_display = ('id', 'description', 'unit', 'stock', 'price')
     list_display_links = ['id']
     search_fields = ['id', 'description', 'price']
     list_per_page = 50
+    resource_class = ItemResource
 admin.site.register(Item, ItemAdmin)
 
 
-class TransactionAdmin(admin.ModelAdmin):
+class TransactionResource(resources.ModelResource):
+
+    class Meta:
+        model = Transaction
+        fields = ('id', 'number', 'transaction_type', 'status', 'timestamp', 'author__username')
+
+class TransactionAdmin(ImportExportModelAdmin):
     list_display = ('id', 'number', 'transaction_type', 'status', 'timestamp', 'author__username')
     list_display_links = ['id']
     list_filter = ('transaction_type', 'status')
     search_fields = ['id', 'number', 'transaction_type']
     list_per_page = 50
+    resource_class = TransactionResource
 
     def author__username(self, obj):
         if obj.author:
@@ -32,11 +49,18 @@ class TransactionAdmin(admin.ModelAdmin):
     author__username.allow_tags = True
 admin.site.register(Transaction, TransactionAdmin)
 
-class ParticularAdmin(admin.ModelAdmin):
+class ParticularResource(resources.ModelResource):
+
+    class Meta:
+        model = Particular
+        fields = ('id', 'transaction__number', 'item__description', 'subtotal', 'quantity')
+
+class ParticularAdmin(ImportExportModelAdmin):
     list_display = ('id', 'transaction__number', 'item__description', 'subtotal', 'quantity')
     list_display_links = ['id']
     search_fields = ['id', 'transaction__number', 'item__description']
     list_per_page = 50
+    resource_class = ParticularResource
 
     def transaction__number(self, obj):
         if obj.transaction:

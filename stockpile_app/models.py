@@ -33,7 +33,7 @@ class Transaction(models.Model):
                               default='N')
     timestamp = models.DateTimeField(blank=False,
                                      null=True,
-                                     auto_now_add=True)
+                                     auto_now=True)
     author = models.ForeignKey(User,
                                on_delete=models.SET_NULL,
                                blank=True,

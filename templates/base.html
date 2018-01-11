@@ -44,6 +44,12 @@
                         {% block links %} {% endblock %}
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#" id="notification" data-toggle="control-sidebar">
+                                        <i class="fa fa-inbox"></i>
+                                        <span class="label label-danger"></span>
+                                    </a>
+                                </li>
                                 <li class="dropdown user user-menu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         <i class="fa fa-user"></i>
@@ -53,6 +59,18 @@
                                             <img src="{% static 'images/pic_placeholder.png' %}" alt="StockPile" class="img-circle">
                                             <p>{{ user.username }}</p>
                                         </li>
+                                        {% if request.user.is_superuser %}
+                                        <li class="user-body">
+                                            <div class="row">
+                                                <div class="col-xs-6 text-center">
+                                                    <a href="{% url 'cashier' %}">Cashier</a>
+                                                </div>
+                                                <div class="col-xs-6 text-center">
+                                                    <a href="{% url 'counter' %}">Counter</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endif %}
                                         <li class="user-footer">
                                             {% if request.user.is_superuser %}
                                             <div class="pull-left">
@@ -66,12 +84,6 @@
                                             </div>
                                         </li>
                                     </ul>
-                                </li>
-                                <li>
-                                    <a href="#" id="notification" data-toggle="control-sidebar">
-                                        <i class="fa fa-inbox"></i>
-                                        <span class="label label-danger"></span>
-                                    </a>
                                 </li>
                             </ul>
                         </div>
