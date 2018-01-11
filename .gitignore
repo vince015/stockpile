@@ -13,6 +13,7 @@ fake-eggs
 parts
 dist
 migrations
+logs
 .installed.cfg
 .mr.developer.cfg
 .hg
