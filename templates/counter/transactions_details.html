@@ -13,6 +13,7 @@
             <ul class="todo-list">
                 {% for particular in particulars %}
                     <li>
+                        <input type="checkbox" onclick="onToDoItemChange(this)" class="todo-checkbox">
                         <span class="label label-danger">{{ particular.quantity }}</span>
                         <span class="text">{{ particular.item.description }}</span>
                     </li>
@@ -21,7 +22,7 @@
             <input type="hidden" name="status" value="R">
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="orderDone({{ transaction.id }})">Done</button>
+            <button type="button" class="btn btn-primary" onclick="orderDone({{ transaction.id }})" disabled id="order-done-button">Done</button>
             <button type="button" class="btn btn-sm btn-danger pull-left" onclick="orderCancel({{ transaction.id }})">Cancel</button>
         </div>
     </div>

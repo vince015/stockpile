@@ -2674,3 +2674,150 @@ ERROR 2018-01-10 21:39:44,559 signals 4877 123145542955008 96 95
 INFO 2018-01-10 21:39:44,559 signals 4877 123145542955008 Sending notification...
 INFO 2018-01-10 21:41:06,669 signals 4900 123145442390016 Sending notification...
 INFO 2018-01-10 21:41:18,917 signals 4900 123145442390016 Sending notification...
+WARNING 2018-01-11 20:41:13,181 base 4539 123145327194112 Not Found: /favicon.ico
+WARNING 2018-01-11 20:41:26,174 base 4539 123145332449280 Not Found: /favicon.ico
+WARNING 2018-01-11 20:42:59,480 base 4539 123145321938944 Not Found: /favicon.ico
+WARNING 2018-01-11 20:46:37,707 base 4586 123145458606080 Not Found: /favicon.ico
+WARNING 2018-01-11 20:46:38,229 base 4586 123145458606080 Not Found: /favicon.ico
+WARNING 2018-01-11 20:48:36,880 base 4603 123145428213760 Not Found: /favicon.ico
+WARNING 2018-01-11 20:49:14,438 base 4609 123145396322304 Not Found: /favicon.ico
+WARNING 2018-01-11 20:49:38,646 base 4613 123145563996160 Not Found: /favicon.ico
+WARNING 2018-01-11 20:49:40,990 base 4613 123145563996160 Not Found: /favicon.ico
+WARNING 2018-01-11 20:50:26,588 base 4619 123145533644800 Not Found: /favicon.ico
+WARNING 2018-01-11 20:51:00,549 base 4628 123145325453312 Not Found: /favicon.ico
+WARNING 2018-01-11 20:52:21,646 base 4641 123145337524224 Not Found: /favicon.ico
+WARNING 2018-01-11 20:53:30,964 base 4649 123145333981184 Not Found: /favicon.ico
+ERROR 2018-01-11 20:54:21,186 exception 4653 123145538830336 Filtering by item__description not allowed
+WARNING 2018-01-11 20:54:21,993 base 4653 123145549340672 Not Found: /favicon.ico
+ERROR 2018-01-11 20:54:22,815 exception 4653 123145533575168 Filtering by item__description not allowed
+WARNING 2018-01-11 20:54:23,039 base 4653 123145544085504 Not Found: /favicon.ico
+ERROR 2018-01-11 20:54:36,806 exception 4653 123145538830336 Filtering by transaction__number not allowed
+ERROR 2018-01-11 20:54:38,116 exception 4653 123145533575168 Filtering by transaction__number not allowed
+ERROR 2018-01-11 20:54:38,953 exception 4653 123145538830336 Filtering by transaction__number not allowed
+WARNING 2018-01-11 20:54:46,139 base 4653 123145544085504 Not Found: /favicon.ico
+WARNING 2018-01-11 20:57:15,386 base 4705 123145347117056 Not Found: /favicon.ico
+WARNING 2018-01-11 21:05:47,694 base 4761 123145581998080 Not Found: /favicon.ico
+INFO 2018-01-11 21:13:42,943 signals 4831 123145507270656 Sending notification...
+INFO 2018-01-13 15:43:36,736 signals 5408 123145378631680 Sending notification...
+ERROR 2018-01-13 15:46:07,729 exception 5477 123145327857664 Invalid HTTP_HOST header: '127.0.0.1:8080'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+ERROR 2018-01-13 15:46:08,388 exception 5477 123145322602496 Invalid HTTP_HOST header: '127.0.0.1:8080'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+WARNING 2018-01-13 15:46:46,332 base 5480 123145479380992 Not Found: /
+WARNING 2018-01-13 15:46:47,097 base 5480 123145468870656 Not Found: /favicon.ico
+INFO 2018-01-13 15:52:10,106 signals 5480 123145479380992 Sending notification...
+INFO 2018-01-13 15:55:06,804 signals 5480 123145484636160 Sending notification...
+INFO 2018-01-13 15:56:14,801 signals 5480 123145484636160 Sending notification...
+WARNING 2018-01-13 15:56:45,112 base 5480 123145474125824 Not Found: /favicon.ico
+WARNING 2018-01-13 16:06:00,235 base 5613 123145475657728 Not Found: /favicon.ico
+WARNING 2018-01-13 16:06:42,430 base 5621 123145539055616 Not Found: /favicon.ico
+ERROR 2018-01-13 16:08:48,222 exception 5636 123145508700160 Internal Server Error: /admin/stockpile_app/particular/
+Traceback (most recent call last):
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/db/models/options.py", line 617, in get_field
+    return self.fields_map[field_name]
+KeyError: 'transaction__timestamp'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/utils.py", line 283, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/utils.py", line 317, in _get_non_gfk_field
+    field = opts.get_field(name)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/db/models/options.py", line 619, in get_field
+    raise FieldDoesNotExist("%s has no field named '%s'" % (self.object_name, field_name))
+django.core.exceptions.FieldDoesNotExist: Particular has no field named 'transaction__timestamp'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/core/handlers/base.py", line 217, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/channels/handler.py", line 243, in process_exception_by_middleware
+    return super(AsgiHandler, self).process_exception_by_middleware(exception, request)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/core/handlers/base.py", line 215, in _get_response
+    response = response.render()
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/response.py", line 107, in render
+    self.content = self.rendered_content
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/response.py", line 84, in rendered_content
+    content = template.render(context, self._request)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/backends/django.py", line 66, in render
+    return self.template.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 207, in render
+    return self._render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/loader_tags.py", line 177, in render
+    return compiled_parent._render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/loader_tags.py", line 177, in render
+    return compiled_parent._render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/loader_tags.py", line 177, in render
+    return compiled_parent._render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/loader_tags.py", line 177, in render
+    return compiled_parent._render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/loader_tags.py", line 72, in render
+    result = block.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/loader_tags.py", line 72, in render
+    result = block.nodelist.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/base.py", line 957, in render_annotated
+    return self.render(context)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/template/library.py", line 225, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/templatetags/admin_list.py", line 340, in result_list
+    'results': list(results(cl))}
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/templatetags/admin_list.py", line 316, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/templatetags/admin_list.py", line 307, in __init__
+    super(ResultList, self).__init__(*items)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/templatetags/admin_list.py", line 218, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+  File "/Users/vince/Documents/StockPile/env/lib/python3.6/site-packages/django/contrib/admin/utils.py", line 295, in lookup_field
+    value = attr(obj)
+  File "/Users/vince/Documents/StockPile/stockpile_app/admin.py", line 86, in transaction__timestamp
+    return '<a href="{0}">{1}</a>'.format(link, datetime.strftime("%Y-%m-%d", obj.transaction.timestamp))
+TypeError: descriptor 'strftime' requires a 'datetime.date' object but received a 'str'
+WARNING 2018-01-13 16:08:48,748 base 5636 123145498189824 Not Found: /favicon.ico
+WARNING 2018-01-13 16:09:01,238 base 5639 123145340960768 Not Found: /favicon.ico
+WARNING 2018-01-13 16:09:32,757 base 5644 123145542344704 Not Found: /favicon.ico
+INFO 2018-01-13 16:13:14,823 signals 5644 123145552855040 Sending notification...
+INFO 2018-01-13 16:18:49,829 signals 5644 123145552855040 Sending notification...
+INFO 2018-01-13 16:19:07,688 signals 5644 123145547599872 Sending notification...
+INFO 2018-01-13 16:19:17,542 signals 5644 123145542344704 Sending notification...
+INFO 2018-01-13 16:19:40,973 signals 5644 123145547599872 Sending notification...
+INFO 2018-01-14 20:29:48,793 signals 7728 123145429598208 Sending notification...
+INFO 2018-01-14 20:29:54,110 signals 7728 123145434853376 Sending notification...
+INFO 2018-01-14 20:30:24,525 signals 7728 123145440108544 Sending notification...

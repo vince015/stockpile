@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
+from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from django_datatables_view.base_datatable_view import BaseDatatableView
@@ -180,8 +181,15 @@ class TransactionListJson(BaseDatatableView):
     def filter_queryset(self, qs):
         search = self.request.GET.get('search[value]', None)
         if search:
-            search = int(search)
-            qs = qs.filter(id=search)
+            try:
+                search = int(search)
+                qs = qs.filter(Q(id=search) |
+                               Q(number__icontains=search))
+            except ValueError:
+                qs = qs.filter(Q(number__icontains=search) |
+                               Q(status__icontains=search) |
+                               Q(assignee__icontains=search)|
+                               Q(author__username__icontains=search))
         return qs
 
     def prepare_results(self, qs):

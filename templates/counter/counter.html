@@ -187,17 +187,22 @@
 
     function orderCancel(order_id)
     {
-        $.ajax({
-            type: "POST",
-            url: "transactions/edit/" + order_id,
-            data: {
-                "status": "C",
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-            },
-            success:  orderCancelOK,
-            error: orderCancelNG,
-            dataType: "json"
-        });
+        msg = "Are you sure you want to CANCEL Transaction No." + order_id + "?"
+        if (confirm(msg))
+        {
+            $.ajax({
+                type: "POST",
+                url: "transactions/edit/" + order_id,
+                data: {
+                    "status": "C",
+                    "csrfmiddlewaretoken": "{{ csrf_token }}"
+                },
+                success:  orderCancelOK,
+                error: orderCancelNG,
+                dataType: "json"
+            });
+        }
+        return false;
     }
     function orderCancelOK(data, textStatus, jqXHR)
     {
@@ -264,6 +269,11 @@
         if ($(e).is(':checked'))
         {
             $(e).parent().addClass("done");
+
+            if ($('.todo-checkbox:checked').length == $('.todo-checkbox').length)
+            {
+                $("#order-done-button").prop('disabled', false);
+            }
         }
         else
         {

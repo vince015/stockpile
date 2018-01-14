@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import admin
 from django.core import urlresolvers
 from import_export import resources
@@ -53,12 +55,12 @@ class ParticularResource(resources.ModelResource):
 
     class Meta:
         model = Particular
-        fields = ('id', 'transaction__number', 'item__description', 'subtotal', 'quantity')
+        fields = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity')
 
 class ParticularAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'transaction__number', 'item__description', 'subtotal', 'quantity')
+    list_display = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity')
     list_display_links = ['id']
-    search_fields = ['id', 'transaction__number', 'item__description']
+    search_fields = ['id', 'transaction__number', 'item__description', 'transaction__timestamp']
     list_per_page = 50
     resource_class = ParticularResource
 
@@ -77,4 +79,12 @@ class ParticularAdmin(ImportExportModelAdmin):
         else:
             return ''
     item__description.allow_tags = True
+
+    def transaction__timestamp(self, obj):
+        if obj.transaction:
+            link = urlresolvers.reverse("admin:stockpile_app_transaction_change", args=[obj.transaction.id])
+            return '<a href="{0}">{1}</a>'.format(link, datetime.strftime(obj.transaction.timestamp, "%Y-%m-%d"))
+        else:
+            return ''
+    transaction__timestamp.allow_tags = True
 admin.site.register(Particular, ParticularAdmin)

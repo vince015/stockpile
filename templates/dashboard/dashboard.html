@@ -122,17 +122,22 @@
     }
     function orderReady(order_id)
     {
-        $.ajax({
-            type: "POST",
-            url: "transactions/edit/" + order_id,
-            data: {
-                "status": "R",
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-            },
-            success:  orderReadyOK,
-            error: orderReadyNG,
-            dataType: "json"
-        });
+        msg = "Are you sure you want to APPROVE Transaction No." + order_id + "?"
+        if (confirm(msg))
+        {
+            $.ajax({
+                type: "POST",
+                url: "transactions/edit/" + order_id,
+                data: {
+                    "status": "R",
+                    "csrfmiddlewaretoken": "{{ csrf_token }}"
+                },
+                success:  orderReadyOK,
+                error: orderReadyNG,
+                dataType: "json"
+            });
+        }
+        return false;
     }
     function orderReadyOK(data, textStatus, jqXHR)
     {
@@ -197,17 +202,22 @@
 
     function orderCancel(order_id)
     {
-        $.ajax({
-            type: "POST",
-            url: "transactions/edit/" + order_id,
-            data: {
-                "status": "C",
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-            },
-            success:  orderCancelOK,
-            error: orderCancelNG,
-            dataType: "json"
-        });
+        msg = "Are you sure you want to CANCEL Transaction No." + order_id + "?"
+        if (confirm(msg))
+        {
+            $.ajax({
+                type: "POST",
+                url: "transactions/edit/" + order_id,
+                data: {
+                    "status": "C",
+                    "csrfmiddlewaretoken": "{{ csrf_token }}"
+                },
+                success:  orderCancelOK,
+                error: orderCancelNG,
+                dataType: "json"
+            });
+        }
+        return false;
     }
     function orderCancelOK(data, textStatus, jqXHR)
     {
