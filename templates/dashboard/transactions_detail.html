@@ -9,16 +9,51 @@
                 <span class="text">S.I. Number: {{ transaction.number }}</span>
             </h4>
         </div>
-        <div class="modal-body">
-            <ul class="todo-list">
-                {% for particular in particulars %}
-                    <li>
-                        <span class="label label-danger">{{ particular.quantity }}</span>
-                        <span class="text">{{ particular.item.description }}</span>
-                    </li>
-                {% endfor %}
+        <div class="modal-body nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#items_tab" data-toggle="tab">Items</a></li>
+                <li><a href="#details_tab" data-toggle="tab">Details</a></li>
             </ul>
-            <input type="hidden" name="status" value="R">
+            <div class="tab-content">
+                <div class="tab-pane active" id="items_tab">
+                    <ul class="todo-list">
+                        {% for particular in particulars %}
+                            <li>
+                                <span class="label label-danger">{{ particular.quantity }}</span>
+                                <span class="text">{{ particular.item.description }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="tab-pane" id="details_tab">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <b>ID</b>
+                            <span class="pull-right text-muted">{{ transaction.id }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>S.I. Number</b>
+                            <span class="pull-right text-muted">{{ transaction.number }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Timestamp</b>
+                            <span class="pull-right text-muted">{{ transaction.timestamp|date:"Y-m-d" }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Author</b>
+                            <span class="pull-right text-muted">{{ transaction.author.username|default_if_none:"" }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Remarks</b>
+                            <span class="pull-right text-muted">{{ transaction.remarks|default_if_none:"" }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Assignee</b>
+                            <span class="pull-right text-muted">{{ transaction.assignee|default_if_none:"" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default">
