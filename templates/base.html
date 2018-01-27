@@ -144,11 +144,8 @@
             $("#notification").click(function() {
                 $("#notification span").text("");
                 $.ajax({
-                    type: "POST",
-                    url: "{% url 'transaction_latest' %}",
-                    data: {
-                        "csrfmiddlewaretoken": "{{ csrf_token }}"
-                    },
+                    type: "GET",
+                    url: "{% url 'notifications' %}",
                     success: orderLatestResult,
                     dataType: "html"
                 })

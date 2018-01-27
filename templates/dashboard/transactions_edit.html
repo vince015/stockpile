@@ -222,25 +222,29 @@
         }
         return false;
     }
-
     // create websocket instance
-    var ws = new WebSocket("ws://localhost:8080/");
+    var tcp = "ws://"
+    if (window.location.protocol == "https:")
+    {
+        tcp = "wss://"
+    }
+    var host = window.location.host;
+    var path = "/";
+    var ws = new WebSocket(tcp + host + path);
 
     // Handle incoming websocket message callback
     ws.onmessage = function(evt) {
         $("#notification span").text("!");
-        // getTransactions(1);
     };
 
     // Close Websocket callback
     ws.onclose = function(evt) {
-        // alert("Connection closed");
+        alert("Connection closed");
     };
 
     // Open Websocket callback
     ws.onopen = function(evt) {
         console.log("Connection open");
-        // getTransactions(1);
     };
 </script>
 {% endblock %}
