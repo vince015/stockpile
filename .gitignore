@@ -3,6 +3,7 @@
 *.egg
 *.EGG
 *.EGG-INFO
+*.log
 env
 bin
 build
