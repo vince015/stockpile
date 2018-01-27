@@ -188,6 +188,7 @@ class TransactionListJson(BaseDatatableView):
             except ValueError:
                 qs = qs.filter(Q(number__icontains=search) |
                                Q(status__icontains=search) |
+                               Q(timestamp__icontains=search) |
                                Q(assignee__icontains=search)|
                                Q(author__username__icontains=search))
         return qs
