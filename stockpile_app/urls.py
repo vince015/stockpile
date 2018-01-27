@@ -10,7 +10,7 @@ home_url = [
     url(r'^login/$', home.user_login, name='login'),
     url(r'^logout/$', home.user_logout, name='logout'),
     url(r'^403/$', home.Error403.as_view(), name='403'),
-    url(r'^transaction/latest$', home.transaction_latest, name='transaction_latest')
+    url(r'^notifications/$', home.notifications, name='notifications')
 ]
 
 dashboard_url = [

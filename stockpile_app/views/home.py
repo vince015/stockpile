@@ -34,7 +34,7 @@ def user_login(request):
 
     try:
         # Redirection
-        template = "stockpile_app/login.html"
+        template = "login.html"
         context_dict = dict()
 
         redirect = request.GET.get("next", get_home(request.user))
@@ -72,15 +72,14 @@ def user_logout(request):
     return HttpResponseRedirect("/stockpile/login")
 
 @login_required()
-def transaction_latest(request):
+def notifications(request):
 
     try:
-        template = "transaction_latest.html"
+        template = "notifications.html"
         context_dict = dict()
 
-        if request.method == "POST":
-            transactions = Transaction.objects.filter(transaction_type="out")
-            context_dict["transactions"] = transactions.order_by('-timestamp')[:10]
+        transactions = Transaction.objects.filter(transaction_type="out")
+        context_dict["transactions"] = transactions.order_by('-timestamp')[:10]
 
     except:
         context_dict["error"] = "Unable to retrieve Transactions"
