@@ -63,6 +63,8 @@
 
 <div class="modal fade" id="process-order">
 </div>
+
+<!-- <audio src="{{ media.coins.ogg }}" id="notif-sound"></audio> -->
 {% endblock %}
 
 {% block right_side_bar %}
@@ -295,6 +297,9 @@
     ws.onmessage = function(evt) {
         $("#notification span").text("!");
         getTransactions();
+
+        var audio = new Audio('/media/coins.ogg');
+        audio.play();
     };
 
     // Close Websocket callback

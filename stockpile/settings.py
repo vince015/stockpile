@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'channels',
     'import_export',
     'rangefilter',
-	'stockpile_app',
+    'stockpile_app',
 ]
 
 CHANNEL_LAYERS = {
