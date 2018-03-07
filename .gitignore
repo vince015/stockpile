@@ -12,7 +12,6 @@ downloads
 eggs
 fake-eggs
 parts
-dist
 migrations
 logs
 .installed.cfg
