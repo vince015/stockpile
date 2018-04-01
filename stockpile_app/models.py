@@ -58,7 +58,7 @@ class Item(models.Model):
     price = models.DecimalField(max_digits=7,
                                 decimal_places=2,
                                 null=True,
-                                validators=[MinValueValidator(decimal.Decimal('0.01'))],
+                                validators=[MinValueValidator(decimal.Decimal('0.00'))],
                                 default=0.0)
 
 class Particular(models.Model):

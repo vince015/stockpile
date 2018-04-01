@@ -33,8 +33,9 @@ SECRET_KEY = '2ed+%u_#l4y1x^&xy!f#uoct3)0bjwr79*v66fp=d*co0k$(zd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.5']
+ALLOWED_HOSTS = ['*']
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 

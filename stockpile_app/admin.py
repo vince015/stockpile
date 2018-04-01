@@ -58,9 +58,10 @@ class ParticularResource(resources.ModelResource):
         fields = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity')
 
 class ParticularAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity')
+    list_display = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity', 'transaction__status')
     list_display_links = ['id']
     search_fields = ['id', 'transaction__number', 'item__description', 'transaction__timestamp']
+    list_filter = ('transaction__status',)
     list_per_page = 50
     resource_class = ParticularResource
 
@@ -87,4 +88,18 @@ class ParticularAdmin(ImportExportModelAdmin):
         else:
             return ''
     transaction__timestamp.allow_tags = True
+
+    def transaction__status(self, obj):
+        if obj.transaction:
+            mapping = {
+                'D': 'done',
+                'R': 'ready',
+                'N': 'new',
+                'C': 'cancel'
+            }
+            link = urlresolvers.reverse("admin:stockpile_app_transaction_change", args=[obj.transaction.id])
+            return '<a href="{0}">{1}</a>'.format(link, mapping.get(obj.transaction.status, '--'))
+        else:
+            return ''
+    transaction__status.allow_tags = True
 admin.site.register(Particular, ParticularAdmin)

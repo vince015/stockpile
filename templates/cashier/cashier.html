@@ -68,9 +68,10 @@
                         <table class="table table-striped no-margin" id="order-table">
                             <colgroup>
                                 <col style="width:5%">
-                                <col style="width:50%">
+                                <col style="width:45%">
                                 <col style="width:10%;max-width:55px;min-width:55px;">
-                                <col style="width:15%">
+                                <col style="width:10%">
+                                <col style="width:10%">
                                 <col style="width:20%">
                             </colgroup>
                             <thead>
@@ -79,6 +80,7 @@
                                     <th>Item</th>
                                     <th>Qty</th>
                                     <th>Price</th>
+                                    <th>Unit</th>
                                     <th>Subtotal</th>
                                 </tr>
                             </thead>
@@ -163,7 +165,8 @@
                     <table class="table table-hover">
                         <colgroup>
                             <col style="width:10%">
-                            <col style="width:65%">
+                            <col style="width:55%">
+                            <col style="width:10%">
                             <col style="width:10%">
                             <col style="width:15%">
                         </colgroup>
@@ -172,6 +175,7 @@
                                 <th>ID</th>
                                 <th>Item</th>
                                 <th>Stock</th>
+                                <th>Unit</th>
                                 <th>Price</th>
                             </tr>
                         </thead>
@@ -181,6 +185,7 @@
                                     <td>{{ item.id }}</td>
                                     <td><a>{{ item.description }}</a></td>
                                     <td>{{ item.stock }}</td>
+                                    <td>{{ item.unit|default_if_none:"" }}</td>
                                     <td>{{ item.price }}</td>
                                 </tr>
                             {% endfor %}
@@ -231,7 +236,8 @@
             var item_id = $(e).children().eq(0).text();
             var item_desc = $(e).children().eq(1).text();
             var item_stock = $(e).children().eq(2).text();
-            var item_price = $(e).children().eq(3).text();
+            var item_unit = $(e).children().eq(3).text();
+            var item_price = $(e).children().eq(4).text();
 
             if ($("#order-table").find("#item-" + item_id).length < 1)
             {
@@ -240,6 +246,7 @@
                         "<td>" + item_desc + "</td>" +
                         "<td data-stock='" + item_stock + "'><a onclick='qtyInputOnClick(this)'>1</a></td>" +
                         "<td>" + item_price + "</td>" +
+                        "<td>" + item_unit + "</td>" +
                         "<td class='item-subtotal'>" + item_price + "</td>" +
                     "</tr>"
                 );
@@ -335,7 +342,7 @@
 
                 var id = $(this).attr('id');
                 var qty = parseInt(tds.eq(2).text());
-                var price = parseInt(tds.eq(3).text());
+                var price = parseFloat(tds.eq(3).text());
 
                 var order_item = {
                     "id": id.split('-')[1],
