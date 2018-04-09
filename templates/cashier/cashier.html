@@ -334,8 +334,9 @@
                 var tds = $(this).find('td');
 
                 var id = $(this).attr('id');
-                var qty = parseInt(tds.eq(2).text());
-                var price = parseInt(tds.eq(3).text());
+                var qty = parseFloat(tds.eq(2).text());
+                var price = parseFloat(tds.eq(3).text());
+                console.log(price);
 
                 var order_item = {
                     "id": id.split('-')[1],
