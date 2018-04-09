@@ -1,12 +1,30 @@
 {% if items.count > 0%}
     {% for item in items %}
-        <tr onclick="itemSelect(this)">
-            <td>{{ item.id }}</td>
-            <td><a>{{ item.description }}</a></td>
-            <td>{{ item.stock }}</td>
-            <td>{{ item.unit }}</td>
-            <td>{{ item.price }}</td>
-        </tr>
+        {% if item.stock == 1 %}
+            <tr onclick="itemSelect(this)" class="bg-gray color-palette">
+                <td>{{ item.id }}</td>
+                <td><a>{{ item.description }}</a></td>
+                <td>{{ item.stock }}</td>
+                <td>{{ item.unit }}</td>
+                <td>{{ item.price }}</td>
+            </tr>
+        {% elif item.stock > 0 %}
+            <tr onclick="itemSelect(this)">
+                <td>{{ item.id }}</td>
+                <td><a>{{ item.description }}</a></td>
+                <td>{{ item.stock }}</td>
+                <td>{{ item.unit }}</td>
+                <td>{{ item.price }}</td>
+            </tr>
+        {% else %}
+            <tr class="bg-red disabled color-palette">
+                <td>{{ item.id }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.stock }}</td>
+                <td>{{ item.unit }}</td>
+                <td>{{ item.price }}</td>
+            </tr>
+        {% endif %}
     {% endfor %}
 {% elif error %}
     <tr>

@@ -79,8 +79,8 @@
                                     <th><i class="fa fa-close"></i></th>
                                     <th>Item</th>
                                     <th>Qty</th>
-                                    <th>Price</th>
                                     <th>Unit</th>
+                                    <th>Price</th>
                                     <th>Subtotal</th>
                                 </tr>
                             </thead>
@@ -179,16 +179,7 @@
                                 <th>Price</th>
                             </tr>
                         </thead>
-                        <tbody id="search-results">
-                            {% for item in items %}
-                                <tr onclick="itemSelect(this)">
-                                    <td>{{ item.id }}</td>
-                                    <td><a>{{ item.description }}</a></td>
-                                    <td>{{ item.stock }}</td>
-                                    <td>{{ item.unit|default_if_none:"" }}</td>
-                                    <td>{{ item.price }}</td>
-                                </tr>
-                            {% endfor %}
+                        <tbody id="search-results">                           
                         </tbody>
                     </table>
                 </div>
@@ -214,22 +205,26 @@
 
 {% block pagescripts %}
     <script type="text/javascript">
-        $("#search-box").keyup(function() {
+        function itemSearch(query) {
             $.ajax({
                 type: "POST",
                 url: "{% url 'cashier_item_search' %}",
                 data: {
-                    "q": $(this).val(),
+                    "q": query,
                     "csrfmiddlewaretoken": "{{ csrf_token }}"
                 },
                 success: itemSearchResult,
                 dataType: "html"
             })
-        });
+        }
         function itemSearchResult(data, textStatus, jqXHR)
         {
             $("#search-results").html(data);
         }
+
+        $("#search-box").keyup(function() {
+            itemSearch($(this).val());                
+        });
 
         function itemSelect(e)
         {
@@ -239,14 +234,14 @@
             var item_unit = $(e).children().eq(3).text();
             var item_price = $(e).children().eq(4).text();
 
-            if ($("#order-table").find("#item-" + item_id).length < 1)
+            if ($("#order-table").find("#item-" + item_id).length < 1 && item_stock > 0)
             {
                 var row = $("<tr id='item-" + item_id + "'>" +
                         "<td onclick='itemRemove(this)'><a><i class='glyphicon glyphicon-remove-circle'></i></a></td>" +
                         "<td>" + item_desc + "</td>" +
                         "<td data-stock='" + item_stock + "'><a onclick='qtyInputOnClick(this)'>1</a></td>" +
-                        "<td>" + item_price + "</td>" +
                         "<td>" + item_unit + "</td>" +
+                        "<td>" + item_price + "</td>" +
                         "<td class='item-subtotal'>" + item_price + "</td>" +
                     "</tr>"
                 );
@@ -342,7 +337,7 @@
 
                 var id = $(this).attr('id');
                 var qty = parseFloat(tds.eq(2).text());
-                var price = parseFloat(tds.eq(3).text());
+                var price = parseFloat(tds.eq(4).text());
                 console.log(price);
 
                 var order_item = {
@@ -400,6 +395,11 @@
             updateOrderData();
 
             $("#notification span").text("!");
+            $.toaster({
+                    priority : "success",
+                    title : "Success",
+                    message : "Successfully added Transaction"
+                });
         }
         function orderAddedNG(jqXHR, textStatus, errorThrown)
         {
@@ -461,5 +461,32 @@
             $("#submit-btn").prop("disabled", true);
             updateOrderData();
         }
+
+        // create websocket instance
+        var tcp = "ws://"
+        if (window.location.protocol == "https:")
+        {
+            tcp = "wss://"
+        }
+        var host = window.location.host;
+        var path = "/";
+        var ws = new WebSocket(tcp + host + path);
+
+        // Handle incoming websocket message callback
+        ws.onmessage = function(evt) {
+            $("#notification span").text("!");
+            itemSearch("");
+        };
+
+        // Close Websocket callback
+        ws.onclose = function(evt) {
+            alert("Connection closed");
+        };
+
+        // Open Websocket callback
+        ws.onopen = function(evt) {
+            console.log("Connection open");
+            itemSearch("");
+        };
     </script>
 {% endblock %}

@@ -42,7 +42,7 @@ class Transaction(models.Model):
     assignee = models.CharField(max_length=64,
                                 null=True,
                                 blank=True)
-    remarks = models.CharField(max_length=256,
+    remarks = models.CharField(max_length=500,
                                null=True,
                                blank=True)
 

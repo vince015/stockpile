@@ -20,10 +20,23 @@
                         {% for particular in particulars %}
                             <li>
                                 <input type="checkbox" onclick="onToDoItemChange(this)" class="todo-checkbox">
-                                <span class="label label-danger">{{ particular.quantity }}</span>
-                                <span class="text">{{ particular.item.description }}</span>
+                                <span class="label label-danger" style="font-size: 13pt">{{ particular.quantity }}</span>
+                                <span class="label label-danger" style="font-size: 13pt">{{ particular.item.unit }}</span>
+                                <span class="text" style="font-size: 12pt">{{ particular.item.description }}</span>
                             </li>
                         {% endfor %}
+                        {% if transaction.remarks %}
+                            <li>
+                                <span class="label label-info"><i class="fa fa-exclamation"></i></span>
+                                <span class="text-muted">{{ transaction.remarks }}</span>
+                            </li>
+                        {% endif %}
+                        {% if transaction.assignee %}
+                            <li>
+                                <span class="label label-info"><i class="fa fa-child"></i></span>
+                                <span class="text-muted">{{ transaction.assignee }}</span>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="tab-pane" id="details_tab">
@@ -45,12 +58,12 @@
                             <span class="pull-right text-muted">{{ transaction.author.username|default_if_none:"" }}</span>
                         </li>
                         <li class="list-group-item">
-                            <b>Remarks</b>
-                            <span class="pull-right text-muted">{{ transaction.remarks|default_if_none:"" }}</span>
-                        </li>
-                        <li class="list-group-item">
                             <b>Assignee</b>
                             <span class="pull-right text-muted">{{ transaction.assignee|default_if_none:"" }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Remarks</b>
+                            <p class="text-muted">{{ transaction.remarks|default_if_none:"" }}</p>
                         </li>
                     </ul>
                 </div>
