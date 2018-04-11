@@ -179,7 +179,7 @@
                                 <th>Price</th>
                             </tr>
                         </thead>
-                        <tbody id="search-results">                           
+                        <tbody id="search-results">
                         </tbody>
                     </table>
                 </div>
@@ -223,7 +223,7 @@
         }
 
         $("#search-box").keyup(function() {
-            itemSearch($(this).val());                
+            itemSearch($(this).val());
         });
 
         function itemSelect(e)
@@ -268,13 +268,12 @@
         }
         function qtyInputOnChange(e)
         {
-            var price = parseFloat($(e).parent().next().text());
+            var price = parseFloat($(e).parent().next().next().text());
             var qty = parseFloat($(e).val());
 
             var sub = price * qty;
             gross = parseFloat(Math.round(sub * 100) / 100).toFixed(2);
-            $(e).parent().next().next().text(gross);
-
+            $(e).parent().next().next().next().text(gross);
         }
         function qtyInputOnBlur(e)
         {
@@ -309,8 +308,8 @@
                 var tds = $(this).find('td');
 
                 var qty = parseInt(tds.eq(2).text());
-                var price = parseFloat(tds.eq(3).text());
-                var sub = parseFloat(tds.eq(4).text());
+                var price = parseFloat(tds.eq(4).text());
+                var sub = parseFloat(tds.eq(5).text());
 
                 gross = parseFloat(gross) + sub;
                 count++;
@@ -338,7 +337,6 @@
                 var id = $(this).attr('id');
                 var qty = parseFloat(tds.eq(2).text());
                 var price = parseFloat(tds.eq(4).text());
-                console.log(price);
 
                 var order_item = {
                     "id": id.split('-')[1],
