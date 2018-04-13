@@ -150,6 +150,7 @@ def items_edit(request, item_id):
         messages.error(request, 'Unable to edit Item No. {0}.'.format(item_id))
         return redirect('/stockpile/items')
 
+'''
 @login_required()
 def items_delete(request, item_id):
 
@@ -165,6 +166,7 @@ def items_delete(request, item_id):
         LOGGER.error(traceback.format_exc())
         messages.error(request, 'Unable to edit Item No. {0}.'.format(item_id))
         return redirect('/stockpile/items')
+'''
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser, login_url="/stockpile/403"), name='dispatch')
 class TransactionsPage(TemplateView):
@@ -250,6 +252,7 @@ def transactions_edit(request, transaction_id):
         messages.error(request, 'Unable to edit Transaction No {0}.'.format(transaction_id))
         return redirect('/stockpile/transactions')
 
+'''
 @login_required()
 def transactions_delete(request, transaction_id):
 
@@ -267,3 +270,4 @@ def transactions_delete(request, transaction_id):
         LOGGER.error(traceback.format_exc())
         messages.error(request, 'Unable to delete Transaction No. {0}'.format(transaction_id))
         return redirect('/stockpile/transactions')
+'''

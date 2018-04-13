@@ -58,12 +58,8 @@
                 <!-- widget -->
                 {{ form.price }}
         </form>
-        <form action="{% url 'item_delete' item_id=form.instance.id %}" method="post" id="item_delete_form">
-        {% csrf_token %}
-        </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn-sm btn-danger pull-left" onclick="deleteItem({{ form.instance.id }})">Delete</button>
             <button type="button" class="btn btn-primary pull-right" onclick="editItem({{ form.instance.id }})">Submit</button>
         </div>
     </div>

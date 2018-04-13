@@ -136,11 +136,7 @@
                 </div>
             </div>
             </form>
-            <form action="{% url 'transaction_delete' transaction_id=form.instance.id %}" method="post" id="transaction_delete_form">
-                {% csrf_token %}
-            </form>
             <div class="box-footer">
-                <button type="button" class="btn-sm btn-danger pull-left" onclick="deleteTransaction({{ form.instance.id }})">Delete</button>
                 <button type="button" class="btn btn-primary pull-right" onclick="editTransaction({{ form.instance.id }})">Submit</button>
             </div>
         </div>
@@ -216,15 +212,6 @@
         $("#transaction_edit_form").submit();
     }
 
-    function deleteTransaction(transaction_id)
-    {
-        msg = "Are you sure you want to delete Transaction No." + transaction_id + "?"
-        if (confirm(msg))
-        {
-            $("#transaction_delete_form").submit();
-        }
-        return false;
-    }
     // create websocket instance
     var tcp = "ws://"
     if (window.location.protocol == "https:")

@@ -152,16 +152,6 @@
         $("#item_edit_form").submit();
     }
 
-    function deleteItem(item_id)
-    {
-        msg = "Are you sure you want to delete Item No." + item_id + "?"
-        if (confirm(msg))
-        {
-            $("#item_delete_form").submit();
-        }
-        return false;
-    }
-
     $(function () {
         var editor;
         var ITEMS_LIST_JSON_URL = "{% url 'items_json' %}";

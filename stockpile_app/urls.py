@@ -21,11 +21,11 @@ dashboard_url = [
     url(r'^items/$', login_required(dashboard.ItemsPage.as_view()), name='items'),
     url(r'^items/json$', login_required(dashboard.ItemsListJson.as_view()), name='items_json'),
     url(r'^items/edit/(?P<item_id>[0-9]+)$', dashboard.items_edit, name='item_edit'),
-    url(r'^items/delete/(?P<item_id>[0-9]+)$', dashboard.items_delete, name='item_delete'),
+    # url(r'^items/delete/(?P<item_id>[0-9]+)$', dashboard.items_delete, name='item_delete'),
     url(r'^transactions/$', login_required(dashboard.TransactionsPage.as_view()), name='transactions'),
     url(r'^transactions/json$', login_required(dashboard.TransactionListJson.as_view()), name='transactions_json'),
     url(r'^transactions/edit/(?P<transaction_id>[0-9]+)$', dashboard.transactions_edit, name='transaction_edit'),
-    url(r'^transactions/delete/(?P<transaction_id>[0-9]+)$', dashboard.transactions_delete, name='transaction_delete'),
+    # url(r'^transactions/delete/(?P<transaction_id>[0-9]+)$', dashboard.transactions_delete, name='transaction_delete'),
 ]
 
 cashier_url = [

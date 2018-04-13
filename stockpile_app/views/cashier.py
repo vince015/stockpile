@@ -72,7 +72,6 @@ def transaction_add(request):
 
             """[{'id': '6', 'qty': 1, 'price': 927}, {'id': '8', 'qty': 1, 'price': 232}]"""
             items = json.loads(request.POST.get('items')) or []
-            print(items)
             for item in items:
                 item_id = item.get("id")
                 qty = int(item.get("qty"))
@@ -94,7 +93,6 @@ def transaction_add(request):
                 serializer.save()
                 return JsonResponse(serializer.data, status=200)
             else:
-                print(serializer.errors)
                 return JsonResponse(serializer.errors, status=400)
 
     except:
