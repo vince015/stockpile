@@ -17,12 +17,22 @@ class ItemResource(resources.ModelResource):
 
     class Meta:
         model = Item
-        fields = ('id', 'description', 'unit', 'stock', 'price')
+        fields = ('id',
+                  'description',
+                  'unit',
+                  'stock',
+                  'price')
 
 class ItemAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'description', 'unit', 'stock', 'price')
+    list_display = ('id',
+                    'description',
+                    'unit',
+                    'stock',
+                    'price')
     list_display_links = ['id']
-    search_fields = ['id', 'description', 'price']
+    search_fields = ['id',
+                     'description',
+                     'price']
     list_per_page = 50
     resource_class = ItemResource
 admin.site.register(Item, ItemAdmin)
@@ -32,13 +42,26 @@ class TransactionResource(resources.ModelResource):
 
     class Meta:
         model = Transaction
-        fields = ('id', 'number', 'transaction_type', 'status', 'timestamp', 'author__username')
+        fields = ('id',
+                  'number',
+                  'transaction_type',
+                  'status',
+                  'timestamp',
+                  'author__username')
 
 class TransactionAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'number', 'transaction_type', 'status', 'timestamp', 'author__username')
+    list_display = ('id',
+                    'number',
+                    'transaction_type',
+                    'timestamp',
+                    'status',
+                    'author__username')
     list_display_links = ['id']
-    list_filter = ('transaction_type', 'status')
-    search_fields = ['id', 'number', 'transaction_type']
+    list_filter = ('transaction_type',
+                    'status')
+    search_fields = ['id',
+                     'number',
+                     'transaction_type']
     list_per_page = 50
     resource_class = TransactionResource
 
@@ -55,12 +78,26 @@ class ParticularResource(resources.ModelResource):
 
     class Meta:
         model = Particular
-        fields = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity')
+        fields = ('id',
+                  'transaction__number',
+                  'transaction__timestamp',
+                  'item__description',
+                  'quantity',
+                  'item__unit')
 
 class ParticularAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'transaction__number', 'item__description', 'transaction__timestamp', 'quantity', 'transaction__status')
+    list_display = ('id',
+                    'transaction__number',
+                    'transaction__timestamp',
+                    'item__description',
+                    'quantity',
+                    'item__unit',
+                    'transaction__status')
     list_display_links = ['id']
-    search_fields = ['id', 'transaction__number', 'item__description', 'transaction__timestamp']
+    search_fields = ['id',
+                     'transaction__number',
+                     'item__description',
+                     'transaction__timestamp']
     list_filter = ('transaction__status',)
     list_per_page = 50
     resource_class = ParticularResource
@@ -73,6 +110,13 @@ class ParticularAdmin(ImportExportModelAdmin):
             return ''
     transaction__number.allow_tags = True
 
+    def transaction__timestamp(self, obj):
+        if obj.transaction:
+            return datetime.strftime(obj.transaction.timestamp, "%Y-%m-%d")
+        else:
+            return ''
+    transaction__timestamp.allow_tags = True
+
     def item__description(self, obj):
         if obj.item:
             link = urlresolvers.reverse("admin:stockpile_app_item_change", args=[obj.item.id])
@@ -81,13 +125,12 @@ class ParticularAdmin(ImportExportModelAdmin):
             return ''
     item__description.allow_tags = True
 
-    def transaction__timestamp(self, obj):
-        if obj.transaction:
-            link = urlresolvers.reverse("admin:stockpile_app_transaction_change", args=[obj.transaction.id])
-            return '<a href="{0}">{1}</a>'.format(link, datetime.strftime(obj.transaction.timestamp, "%Y-%m-%d"))
+    def item__unit(self, obj):
+        if obj.item:
+            return obj.item.unit
         else:
             return ''
-    transaction__timestamp.allow_tags = True
+    item__unit.allow_tags = True
 
     def transaction__status(self, obj):
         if obj.transaction:
@@ -97,8 +140,7 @@ class ParticularAdmin(ImportExportModelAdmin):
                 'N': 'new',
                 'C': 'cancel'
             }
-            link = urlresolvers.reverse("admin:stockpile_app_transaction_change", args=[obj.transaction.id])
-            return '<a href="{0}">{1}</a>'.format(link, mapping.get(obj.transaction.status, '--'))
+            return mapping.get(obj.transaction.status, '--')
         else:
             return ''
     transaction__status.allow_tags = True

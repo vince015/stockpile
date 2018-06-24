@@ -108,8 +108,8 @@ class ItemsPage(TemplateView):
 
 class ItemsListJson(BaseDatatableView):
     model = Item
-    columns = ['id', 'description', 'stock', 'price']
-    order_columns = ['id', 'description', 'stock', 'price']
+    columns = ['id', 'description', 'unit', 'stock', 'price']
+    order_columns = ['id', 'description', 'unit', 'stock', 'price']
 
     def get_initial_queryset(self):
         return Item.objects.all()
