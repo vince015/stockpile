@@ -17,7 +17,8 @@ from stockpile_app.models import (Transaction,
                                   Item)
 from stockpile_app.serializers import (TransactionSerializer)
 from stockpile_app.forms import (ItemForm,
-                                 TransactionForm)
+                                 TransactionForm,
+                                 ParticularForm)
 
 LOGGER = logging.getLogger('django')
 
@@ -250,6 +251,36 @@ def transactions_edit(request, transaction_id):
     except Exception as e:
         LOGGER.error(traceback.format_exc())
         messages.error(request, 'Unable to edit Transaction No {0}.'.format(transaction_id))
+        return redirect('/stockpile/transactions')
+
+@login_required()
+def particulars_edit(request, particular_id):
+
+    try:
+        context_dict = dict()
+        instance = Particular.objects.get(pk=particular_id)
+
+        if request.method == "POST":
+            form = ParticularForm(request.POST, instance=instance)
+            context_dict["form"] = form
+
+            if form.is_valid():
+                item = form.save(commit=False)
+                item.save()
+
+                messages.success(request, 'Successfully edited particular No. {0}.'.format(instance.id))
+                return redirect('/stockpile/particulars')
+        else:
+            template = "dashboard/particulars_edit.html"
+
+            form = ParticularForm(instance=instance)
+            context_dict["form"] = form
+
+            return render(request, template, context_dict)
+
+    except Exception as e:
+        LOGGER.error(traceback.format_exc())
+        messages.error(request, 'Unable to edit particular No {0}.'.format(particular_id))
         return redirect('/stockpile/transactions')
 
 '''

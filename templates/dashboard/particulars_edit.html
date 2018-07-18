@@ -1,0 +1,73 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">
+                Edit Particular No. {{ form.instance.id }} from Transaction S.I. {{ form.instance.transaction.number }}
+            </h4>
+        </div>
+        <div class="modal-body">
+        <h4></h4>
+        <form action="{% url 'item_edit' item_id=form.instance.id %}" method="post" id="item_edit_form">
+        {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.item.id_for_label }}">
+                    Item
+                </label>
+                <!-- widget -->
+                <input type="text"
+                       value="{{ form.instance.item.description }}"
+                       class="form-control"
+                       disabled="true" 
+                >
+            </div>
+
+            <div class="form-group col-xs-6">
+                <label for="{{ form.item.id_for_label }}">
+                    Unit
+                </label>
+                <!-- widget -->
+                <input type="text"
+                       value="{{ form.instance.item.unit }}"
+                       class="form-control"
+                       disabled="true" 
+                >
+            </div>
+
+            <div class="form-group col-xs-6">
+                <label for="{{ form.item.id_for_label }}">
+                    Stock
+                </label>
+                <!-- widget -->
+                <input type="text"
+                       value="{{ form.instance.item.stock }}"
+                       class="form-control"
+                       disabled="true" 
+                >
+            </div>
+
+            {% if form.quantity.errors %}
+            <div class="form-group has-error">
+            {% else %}
+            <div class="form-group">
+            {% endif %}
+                <label for="{{ form.quantity.id_for_label }}">
+                    Quantity
+                    <ul>
+                        {% for error in form.quantity.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </label>
+                <!-- widget -->
+                {{ form.quantity }}
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary pull-right" onclick="editItem({{ form.instance.id }})">Submit</button>
+        </div>
+    </div>
+</form>
+</div>

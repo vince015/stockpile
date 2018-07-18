@@ -1,5 +1,5 @@
 from django import forms
-from stockpile_app.models import (Item, Transaction)
+from stockpile_app.models import (Item, Transaction, Particular)
 
 class ItemForm(forms.ModelForm):
 
@@ -44,4 +44,16 @@ class TransactionForm(forms.ModelForm):
                                                'placeholder': 'Assignee'}),
             'remarks': forms.TextInput(attrs={'class': 'form-control',
                                               'placeholder': 'Remarks'}),
+        }
+
+class ParticularForm(forms.ModelForm):
+
+    class Meta:
+        model = Particular
+        fields = [
+                    'quantity'
+                ]
+        widgets = {
+            'quantity': forms.NumberInput(attrs={'class': 'form-control',
+                                                 'step': 1}),
         }

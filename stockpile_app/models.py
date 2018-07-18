@@ -61,6 +61,9 @@ class Item(models.Model):
                                 validators=[MinValueValidator(decimal.Decimal('0.00'))],
                                 default=0.0)
 
+    def __str__(self):
+      return self.description
+
 class Particular(models.Model):
 
     transaction = models.ForeignKey(Transaction,

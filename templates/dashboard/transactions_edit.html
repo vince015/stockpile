@@ -30,13 +30,17 @@
         max-width: 40px;
         border-bottom: 1px solid #ccc;
     }
-    #order-table
+    #particular-table
     {
         table-layout: fixed;
     }
-    #order-table a
+    #particular-table tbody tr
     {
         cursor: pointer;
+    }
+    #particular-table td:first-child:hover
+    {
+        text-decoration: underline;
     }
     #modal-submit
     {
@@ -148,7 +152,7 @@
             </div>
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-striped no-margin" id="order-table">
+                    <table class="table table-striped no-margin" id="particular-table">
                         <colgroup>
                             <col style="width:40%">
                             <col style="width:10%"">
@@ -167,7 +171,7 @@
                         </thead>
                         <tbody>
                             {% for particular in particulars %}
-                                <tr>
+                                <tr onclick="editParticular({{ particular.id }})">
                                     <td>{{ particular.item.description }}</td>
                                     <td>{{ particular.quantity }}</td>
                                     <td>{{ particular.item.unit }}</td>
@@ -183,7 +187,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="process-order" style="max-width:80%">
+<div class="modal fade" id="particular-edit">
 </div>
 {% endblock %}
 
@@ -210,6 +214,18 @@
     function editTransaction(transaction_id)
     {
         $("#transaction_edit_form").submit();
+    }
+
+    function editParticular(particular_id)
+    {
+        $.ajax({
+            type: "GET",
+            url: "/stockpile/particulars/edit/" + particular_id,
+            success: function (data) {
+                $('#particular-edit').modal('show').html(data);
+            },
+            dataType: "html"
+        });
     }
 
     // create websocket instance
