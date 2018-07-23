@@ -51,9 +51,22 @@ class ParticularForm(forms.ModelForm):
     class Meta:
         model = Particular
         fields = [
-                    'quantity'
+                    'quantity',
+                    'subtotal'
                 ]
         widgets = {
-            'quantity': forms.NumberInput(attrs={'class': 'form-control',
-                                                 'step': 1}),
+            'subtotal': forms.TextInput(attrs={'type': 'number',
+                                               'class': 'form-control',
+                                               'placeholder': 'Subtotal',
+                                               'readonly': True}),
         }
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+
+        if self.instance:
+            if self.instance.item.stock < quantity:
+                error = 'Quantity, {0}, cannot be more than stock, {1}.'.format(quantity, self.instance.item.stock)
+                raise forms.ValidationError(error,)
+
+        return quantity

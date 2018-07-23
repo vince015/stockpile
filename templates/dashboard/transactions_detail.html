@@ -20,8 +20,15 @@
                         {% for particular in particulars %}
                             <li>
                                 <span class="label label-danger" style="font-size: 14pt">{{ particular.quantity }}</span>
-                                <span class="text-red" style="font-size: 14pt">{{ particular.item.unit }}</span>
-                                <span class="text" style="font-size: 13pt">{{ particular.item.description }}</span>
+                                <!-- <span class="label label-warning" style="font-size: 14pt">{{ particular.item.unit }}</span> -->
+                                <span class="text">
+                                    <span class="text-red"  style="font-size: 14pt">
+                                        &nbsp;{{ particular.item.unit }}&nbsp;
+                                    </span>
+                                    <span  style="font-size: 13pt">
+                                        {{ particular.item.description }}
+                                    </span>
+                                </span>
                             </li>
                         {% endfor %}
                         {% if transaction.remarks %}

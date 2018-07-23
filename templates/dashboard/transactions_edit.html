@@ -77,6 +77,36 @@
 
 {% block main %}
 <div class="row">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                <div class="box box-success box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Success</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        {{ message }}
+                    </div>
+                </div>
+            {% elif message.tags == "error" %}
+                <div class="box box-danger box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Error</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <div class="col-lg-4">
         <div class="box" id="container">
             <form action="{% url 'transaction_edit' transaction_id=form.instance.id %}" method="post" id="transaction_edit_form">
@@ -148,7 +178,7 @@
     <div class="col-lg-8">
         <div class="box">
             <div class="box-header with-border">
-                <h4>Items under this Transaction</h4>
+                <h4><b>Particulars</b> | Items under this Transaction</h4>
             </div>
             <div class="box-body">
                 <div class="table-responsive">
@@ -171,8 +201,12 @@
                         </thead>
                         <tbody>
                             {% for particular in particulars %}
-                                <tr onclick="editParticular({{ particular.id }})">
-                                    <td>{{ particular.item.description }}</td>
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'particular_edit' particular_id=particular.id %}">
+                                            {{ particular.item.description }}
+                                        </a>
+                                    </td>
                                     <td>{{ particular.quantity }}</td>
                                     <td>{{ particular.item.unit }}</td>
                                     <td>{{ particular.item.price }}</td>
@@ -226,6 +260,14 @@
             },
             dataType: "html"
         });
+    }
+    function editParticularSubmit(particular_id)
+    {
+        $("#particular_edit_form").submit();
+    }
+    function editParticularSubmitOK(data, textStatus, jqXHR)
+    {
+        console.log(data);
     }
 
     // create websocket instance

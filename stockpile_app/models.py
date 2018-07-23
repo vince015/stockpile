@@ -46,6 +46,9 @@ class Transaction(models.Model):
                                null=True,
                                blank=True)
 
+    def __str__(self):
+      return 'S.I. {0}'.format(self.number)
+
 class Item(models.Model):
     description = models.CharField(max_length=256,
                                    null=True)
