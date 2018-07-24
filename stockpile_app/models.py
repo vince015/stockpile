@@ -46,6 +46,9 @@ class Transaction(models.Model):
                                null=True,
                                blank=True)
 
+    def __str__(self):
+      return 'S.I. {0}'.format(self.number)
+
 class Item(models.Model):
     description = models.CharField(max_length=256,
                                    null=True)
@@ -60,6 +63,9 @@ class Item(models.Model):
                                 null=True,
                                 validators=[MinValueValidator(decimal.Decimal('0.00'))],
                                 default=0.0)
+
+    def __str__(self):
+      return self.description
 
 class Particular(models.Model):
 

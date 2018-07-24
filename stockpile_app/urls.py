@@ -26,6 +26,7 @@ dashboard_url = [
     url(r'^transactions/json$', login_required(dashboard.TransactionListJson.as_view()), name='transactions_json'),
     url(r'^transactions/edit/(?P<transaction_id>[0-9]+)$', dashboard.transactions_edit, name='transaction_edit'),
     # url(r'^transactions/delete/(?P<transaction_id>[0-9]+)$', dashboard.transactions_delete, name='transaction_delete'),
+    url(r'^particulars/edit/(?P<particular_id>[0-9]+)$', dashboard.particulars_edit, name='particular_edit'),
 ]
 
 cashier_url = [

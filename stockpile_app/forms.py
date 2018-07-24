@@ -1,5 +1,5 @@
 from django import forms
-from stockpile_app.models import (Item, Transaction)
+from stockpile_app.models import (Item, Transaction, Particular)
 
 class ItemForm(forms.ModelForm):
 
@@ -45,3 +45,28 @@ class TransactionForm(forms.ModelForm):
             'remarks': forms.TextInput(attrs={'class': 'form-control',
                                               'placeholder': 'Remarks'}),
         }
+
+class ParticularForm(forms.ModelForm):
+
+    class Meta:
+        model = Particular
+        fields = [
+                    'quantity',
+                    'subtotal'
+                ]
+        widgets = {
+            'subtotal': forms.TextInput(attrs={'type': 'number',
+                                               'class': 'form-control',
+                                               'placeholder': 'Subtotal',
+                                               'readonly': True}),
+        }
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+
+        if self.instance:
+            if self.instance.item.stock < quantity:
+                error = 'Quantity, {0}, cannot be more than stock, {1}.'.format(quantity, self.instance.item.stock)
+                raise forms.ValidationError(error,)
+
+        return quantity

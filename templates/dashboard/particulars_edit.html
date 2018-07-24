@@ -55,13 +55,14 @@
 
 {% block breadcrumb %}
 <h1>
-    TRANSACTIONS
+    PARTICULARS
     <small>EDIT</small>
 </h1>
 <ol class="breadcrumb">
     <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
     <li><a href="{% url 'transactions' %}">Transactions</a></li>
-    <li class="active">Transaction no. {{ form.instance.id }}</li>
+    <li><a href="{% url 'transaction_edit' transaction_id=form.instance.transaction.id %}">Transaction No. {{ form.instance.transaction.id }} | S.I. {{ form.instance.transaction.number }}</a></li>
+    <li class="active">Particular no. {{ form.instance.id }}</li>
 </ol>
 {% endblock %}
 
@@ -107,122 +108,110 @@
         {% endfor %}
     {% endif %}
 
-    <div class="col-lg-4">
-        <div class="box" id="container">
-            <form action="{% url 'transaction_edit' transaction_id=form.instance.id %}" method="post" id="transaction_edit_form">
-            {% csrf_token %}
-            <div class="box-body">
-                {% if form.number.errors %}
+    <div class="box" id="container">
+        <form action="{% url 'particular_edit' particular_id=form.instance.id %}" method="post" id="particular_edit_form">
+        <div class="box-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.item.id_for_label }}">
+                        Item
+                    </label>
+                    <!-- widget -->
+                    <input type="text"
+                           value="{{ form.instance.item.description }}"
+                           class="form-control"
+                           disabled="true"
+                    >
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <label for="{{ form.item.id_for_label }}">
+                        Unit
+                    </label>
+                    <!-- widget -->
+                    <input type="text"
+                           value="{{ form.instance.item.unit }}"
+                           class="form-control"
+                           disabled="true"
+                    >
+                </div>
+
+                <div class="form-group col-xs-6">
+                    <label for="{{ form.item.id_for_label }}">
+                        Stock
+                    </label>
+                    <!-- widget -->
+                    <input type="text"
+                           value="{{ form.instance.item.stock }}"
+                           class="form-control"
+                           disabled="true"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="id_price">
+                        Price
+                        <ul></ul>
+                    </label>
+                    <!-- widget -->
+                    <input type="text"
+                           id="id_price"
+                           value="{{ form.instance.item.price }}"
+                           class="form-control"
+                           disabled="true"
+                    >
+                </div>
+
+                {% if form.quantity.errors %}
                 <div class="form-group has-error">
                 {% else %}
                 <div class="form-group">
                 {% endif %}
-                    <label for="{{ form.number.id_for_label }}">
-                        S.I. Number
+                    <label for="{{ form.quantity.id_for_label }}">
+                        Quantity
                         <ul>
-                            {% for error in form.number.errors %}
+                            {% for error in form.quantity.errors %}
                                 <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                     </label>
-                    {{ form.number }}
+                    <!-- widget -->
+                    <input type="number"
+                           name="quantity"
+                           id="id_quantity"
+                           value="{{ form.instance.quantity }}"
+                           max="{{ form.instance.item.stock }}"
+                           onclick="onQuantityChange(this)"
+                           class="form-control">
                 </div>
 
-                <div class="form-group">
-                    <label>Status</label>
-                    <select class="form-control" name="status">
-                        {% for x,y in form.fields.status.choices %}
-                            <option value="{{ x }}"{% if form.instance.status == x %} selected {% endif %}>{{ y }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                {% if form.assignee.errors %}
+                {% if form.subtotal.errors %}
                 <div class="form-group has-error">
                 {% else %}
                 <div class="form-group">
                 {% endif %}
-                    <label for="{{ form.assignee.id_for_label }}">
-                        Assignee
+                    <label for="{{ form.subtotal.id_for_label }}">
+                        Subtotal
                         <ul>
-                            {% for error in form.assignee.errors %}
+                            {% for error in form.subtotal.errors %}
                                 <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                     </label>
-                    {{ form.assignee }}
+                    <!-- widget -->
+                    {{ form.subtotal }}
                 </div>
-
-                {% if form.remarks.errors %}
-                <div class="form-group has-error">
-                {% else %}
-                <div class="form-group">
-                {% endif %}
-                    <label for="{{ form.remarks.id_for_label }}">
-                        Remarks
-                        <ul>
-                            {% for error in form.remarks.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </label>
-                    {{ form.remarks }}
-                </div>
-            </div>
-            </form>
-            <div class="box-footer">
-                <button type="button" class="btn btn-primary pull-right" onclick="editTransaction({{ form.instance.id }})">Submit</button>
-            </div>
         </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="box">
-            <div class="box-header with-border">
-                <h4><b>Particulars</b> | Items under this Transaction</h4>
-            </div>
-            <div class="box-body">
-                <div class="table-responsive">
-                    <table class="table table-striped no-margin" id="particular-table">
-                        <colgroup>
-                            <col style="width:40%">
-                            <col style="width:10%"">
-                            <col style="width:15%">
-                            <col style="width:15%">
-                            <col style="width:20%">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th>Unit</th>
-                                <th>Price</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for particular in particulars %}
-                                <tr>
-                                    <td>
-                                        <a href="{% url 'particular_edit' particular_id=particular.id %}">
-                                            {{ particular.item.description }}
-                                        </a>
-                                    </td>
-                                    <td>{{ particular.quantity }}</td>
-                                    <td>{{ particular.item.unit }}</td>
-                                    <td>{{ particular.item.price }}</td>
-                                    <td>{{ particular.subtotal }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="box-footer">
+            <button type="button" class="btn btn-default">
+                <a href="{% url 'transaction_edit' transaction_id=form.instance.transaction.id %}" class="pull-left">Back</a>
+            </button>
+            <button type="button" class="btn btn-primary pull-right" onclick="editParticularSubmit({{ form.instance.id }})">Submit</button>
         </div>
+        </form>
     </div>
 </div>
 
-<div class="modal fade" id="particular-edit">
-</div>
 {% endblock %}
 
 {% block right_side_bar %}
@@ -244,30 +233,20 @@
 <script src="{% static "bower_components/datatables.net/js/jquery.dataTables.min.js" %}"></script>
 <script src="{% static "bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" %}"></script>
 <script type="text/javascript">
-
-    function editTransaction(transaction_id)
+    function onQuantityChange(e)
     {
-        $("#transaction_edit_form").submit();
+        var qty = parseFloat($(e).val());
+        var price = parseFloat($("#id_price").val());
+
+        var sub = qty * price;
+        sub = parseFloat(Math.round(sub * 100) / 100).toFixed(2);
+        $("#id_subtotal").val(sub);
     }
 
-    function editParticular(particular_id)
-    {
-        $.ajax({
-            type: "GET",
-            url: "/stockpile/particulars/edit/" + particular_id,
-            success: function (data) {
-                $('#particular-edit').modal('show').html(data);
-            },
-            dataType: "html"
-        });
-    }
     function editParticularSubmit(particular_id)
     {
+        // console.log($("#particular_edit_form"));
         $("#particular_edit_form").submit();
-    }
-    function editParticularSubmitOK(data, textStatus, jqXHR)
-    {
-        console.log(data);
     }
 
     // create websocket instance
