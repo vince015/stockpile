@@ -44,15 +44,15 @@ class TransactionResource(resources.ModelResource):
         model = Transaction
         fields = ('id',
                   'number',
-                  'transaction_type',
-                  'status',
+                  'created',
                   'timestamp',
+                  'status',
                   'author__username')
 
 class TransactionAdmin(ImportExportModelAdmin):
     list_display = ('id',
                     'number',
-                    'transaction_type',
+                    'created',
                     'timestamp',
                     'status',
                     'author__username')

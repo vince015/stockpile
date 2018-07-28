@@ -3,11 +3,8 @@ import decimal
 
 from django.db import models
 from django.core.validators import MinValueValidator
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-
-from django.db.models import signals
+from django.utils import timezone
 
 class Transaction(models.Model):
 
@@ -31,6 +28,9 @@ class Transaction(models.Model):
     status = models.CharField(max_length=2,
                               choices=status_choice,
                               default='N')
+    created = models.DateTimeField(blank=False,
+                                   null=True,
+                                   auto_now_add=True)
     timestamp = models.DateTimeField(blank=False,
                                      null=True,
                                      auto_now=True)
