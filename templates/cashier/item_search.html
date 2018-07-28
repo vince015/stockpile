@@ -1,4 +1,4 @@
-{% if items.count > 0%}
+{% if items %}
     {% for item in items %}
         {% if item.stock == 1 %}
             <tr onclick="itemSelect(this)" class="bg-gray color-palette">

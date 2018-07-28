@@ -14,6 +14,28 @@ from util.util import is_cashier
 
 LOGGER = logging.getLogger('django')
 
+SHOWN_ITEM = 10
+
+def get_recent_items():
+    recent_items = []
+    exclude_list = []
+
+    transactions = Transaction.objects.all().order_by('-created', '-timestamp')
+    for transaction in transactions:
+        for particular in transaction.particulars.all():
+            if particular.item not in recent_items:
+                recent_items.append(particular.item)
+                exclude_list.append(particular.item.id)
+
+    items = Item.objects.all().exclude(id__in=exclude_list)
+    for item in items:
+        if len(recent_items) < SHOWN_ITEM:
+            recent_items.append(item)
+        else:
+            break
+
+    return recent_items
+
 @login_required()
 @user_passes_test(is_cashier, login_url="/stockpile/403")
 def cashier(request):
@@ -23,7 +45,7 @@ def cashier(request):
         context_dict = dict()
 
         if request.method == "GET":
-            context_dict["items"] = Item.objects.all()[:10]
+            context_dict["items"] = get_recent_items()
             return render(request, template, context_dict)
 
     except:
@@ -39,9 +61,11 @@ def item_search(request):
         if request.method == "POST":
             q = request.POST.get("q")
             if q:
+                print('dammmmn')
                 items = Item.objects.filter(description__icontains=q)
             else:
-                items = Item.objects.all()[:10]
+                print('fuuuck')
+                items = get_recent_items()
 
             context_dict["items"] = items
 
@@ -50,6 +74,7 @@ def item_search(request):
         LOGGER.error(traceback.format_exc())
 
     finally:
+        print(context_dict)
         return render(request, template, context_dict)
 
 @login_required()
